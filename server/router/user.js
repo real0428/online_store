@@ -9,11 +9,11 @@ const authMiddleWare = require('../middleware/auth')
 //用戶註冊
 router.post('/user/register', (req, res) => {
   const userInfo = req.body
-  const sql = `SELECT * FROM members WHERE username=?`;
+  const sql = `SELECT * FROM users WHERE username=?`;
   db.query(sql, userInfo.username, (err, results) => {
     if (results.length > 0) res.cc('該用戶名有人使用!')
     userInfo.password = bycript.hashSync(userInfo.password, 10)
-    const sql = `INSERT INTO members SET ?`
+    const sql = `INSERT INTO users SET ?`
     db.query(sql, { username: userInfo.username, password: userInfo.password }, (err, results) => {
       if (err) return res.cc(err)
       if (results.affectedRows != 1) return res.cc('註冊失敗!')
@@ -25,7 +25,7 @@ router.post('/user/register', (req, res) => {
 //用戶登入
 router.post('/user/login', (req, res) => {
   const { username, password } = req.body
-  const sql = `SELECT * FROM members WHERE username=?`
+  const sql = `SELECT * FROM users WHERE username=?`
   db.query(sql, username, (err, results) => {
     if (results.length === 0) return res.status(422).cc('用戶不存在')
     const compareResult = bycript.compareSync(password, results[0].password)
@@ -46,7 +46,7 @@ router.post('/user/login', (req, res) => {
 
 //取得用戶資料
 router.get('/user/info', authMiddleWare, (req, res) => {
-  const sql = `SELECT * FROM members WHERE id=?`
+  const sql = `SELECT * FROM users WHERE id=?`
   const { id } = req.auth
   db.query(sql, id, (err, results) => {
     if (err) return res.cc(err)
@@ -59,7 +59,7 @@ router.get('/user/info', authMiddleWare, (req, res) => {
 router.put('/user/info', authMiddleWare, (req, res) => {
   const { id } = req.auth
   const { nickname, email, user_pic } = req.body
-  const sql = `UPDATE members SET ? WHERE id=?`
+  const sql = `UPDATE users SET ? WHERE id=?`
   db.query(sql, [{ nickname, email, user_pic }, id], (err, results) => {
     if (err) return res.cc(err)
     if (results.affectedRows != 1) return res.cc('資料更新失敗')
@@ -70,7 +70,7 @@ router.put('/user/info', authMiddleWare, (req, res) => {
 //修改用戶密碼
 router.put('/user/pwd', authMiddleWare, (req, res) => {
   const { id } = req.auth
-  const sql = `SELECT * FROM members WHERE id = ?`
+  const sql = `SELECT * FROM users WHERE id = ?`
   db.query(sql, id, (err, results) => {
     if (err) return res.cc(err)
     if (results.length != 1) return res.status(401).cc('無修改權限')
@@ -78,7 +78,7 @@ router.put('/user/pwd', authMiddleWare, (req, res) => {
     const compareResult = bycript.compareSync(oldpwd, results[0].password)
     if (!compareResult) return res.cc('原密碼錯誤')
     newpwd = bycript.hashSync(newpwd, 10)
-    const sql = `UPDATE members SET password=? WHERE id=?`
+    const sql = `UPDATE users SET password=? WHERE id=?`
     db.query(sql, [newpwd, id], (err, results) => {
       if (err) return res.cc(err)
       if (results.affectedRows !== 1) return res.cc('密碼更新失敗')

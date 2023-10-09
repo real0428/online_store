@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const userRouter = require('./router/user')
-const adminRouter = require('./router/admin')
+const businessUserRouter = require('./router/business_user')
 const productCateRouter = require('./router/product_categories')
 const newsCateRouter = require('./router/news_categories')
 const productRouter = require('./router/product')
@@ -26,7 +26,7 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use('/admin', adminRouter)
+app.use('/api', businessUserRouter)
 app.use('/api', userRouter)
 app.use('/api', productCateRouter)
 app.use('/api', newsCateRouter)

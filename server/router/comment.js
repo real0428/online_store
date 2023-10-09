@@ -2,8 +2,9 @@ const express = require('express')
 const router = express.Router()
 const db = require('../db')
 
-router.get('/comments', (req, res) => {
-  const { product_id, comment_id } = req.body
+// 取得評論
+router.get('/product/comment', (req, res) => {
+  const { product_id } = req.body
   const sql = `SELECT * FROM comments WHERE product_id=?`
   db.query(sql, product_id, (err, results) => {
     if (err) return res.cc(err)
@@ -32,6 +33,21 @@ router.get('/comments', (req, res) => {
     res.send({
       status: 0,
       data: response
+    })
+  })
+})
+
+//建立評論
+router.post('/product/comment', (req, res) => {
+  const comment = req.body
+  const sql = `INSERT INTO comments SET ?`
+  db.query(sql, comment, (err, results) => {
+    if (err) return res.cc(err)
+    if (results.affectedRows != 1) return res.cc('建立失敗')
+    res.send({
+      status: 0,
+      message: '建立成功',
+      data: comment
     })
   })
 })
