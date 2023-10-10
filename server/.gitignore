@@ -5,10 +5,6 @@ logs
 node_modules
 *.env
 
-<<<<<<< HEAD
 db
-
-=======
 rc.way
->>>>>>> c9d97d6c106459948887e0530cb5299ebd7bf7ca
 
