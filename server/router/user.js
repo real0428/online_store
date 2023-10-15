@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const authMiddleWare = require('../middleware/auth')
 
-//用戶註冊
+//買家用戶註冊
 router.post('/user/register', (req, res) => {
   const userInfo = req.body
   const sql = `SELECT * FROM users WHERE username=?`;
@@ -22,7 +22,7 @@ router.post('/user/register', (req, res) => {
   })
 })
 
-//用戶登入
+//買家用戶登入
 router.post('/user/login', (req, res) => {
   const { username, password } = req.body
   const sql = `SELECT * FROM users WHERE username=?`
@@ -44,18 +44,24 @@ router.post('/user/login', (req, res) => {
   })
 })
 
-//取得用戶資料
+//取得買家用戶資料
 router.get('/user/info', authMiddleWare, (req, res) => {
   const sql = `SELECT * FROM users WHERE id=?`
   const { id } = req.auth
   db.query(sql, id, (err, results) => {
     if (err) return res.cc(err)
     if (results.length !== 1) return res.status(401).cc('無訪問權限')
-    res.send(results[0])
+    res.send({
+      message: '成功',
+      user: {
+        ...results[0],
+        password: ''
+      }
+    })
   })
 })
 
-//更新用戶資料
+//更新買家用戶資料
 router.put('/user/info', authMiddleWare, (req, res) => {
   const { id } = req.auth
   const { nickname, email, user_pic } = req.body
@@ -67,7 +73,7 @@ router.put('/user/info', authMiddleWare, (req, res) => {
   })
 })
 
-//修改用戶密碼
+//修改買家用戶密碼
 router.put('/user/pwd', authMiddleWare, (req, res) => {
   const { id } = req.auth
   const sql = `SELECT * FROM users WHERE id = ?`
