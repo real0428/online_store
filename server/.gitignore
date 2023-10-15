@@ -4,6 +4,3 @@ logs
 
 node_modules
 *.env
-
-db
-12345
