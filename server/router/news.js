@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../db')
+const moment = require('moment')
 
 // 取得單一或多個消息資訊
 router.get('/news/post', (req, res) => {
@@ -45,6 +46,9 @@ router.put('/news/post', (req, res) => {
   const { item_id } = req.body
   const product = req.body
   const sql = `UPDATE news SET ? WHERE item_id=?`
+  const currentDate = moment()
+  const formatedDate = currentDate.format('YYYY-MM-DD HH:mm')
+  product.update_time = formatedDate
   db.query(sql, [product, item_id], (err, results) => {
     if (err) return res.cc(err)
     if (results.affectedRows != 1) return res.cc('消息更新失敗')
