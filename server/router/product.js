@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../db')
+const moment = require('moment')
 
 // 取得單一或多個商品資訊
 router.get('/product/item', (req, res) => {
@@ -45,6 +46,9 @@ router.put('/product/item', (req, res) => {
   const { item_id } = req.body
   const product = req.body
   const sql = `UPDATE products SET ? WHERE item_id=?`
+  const currentDate = moment();
+  const formatedDate = currentDate.format('YYYY-MM-DD HH:mm')
+  product.update_time = formatedDate
   db.query(sql, [product, item_id], (err, results) => {
     if (err) return res.cc(err)
     if (results.affectedRows != 1) return res.cc('商品更新失敗')
