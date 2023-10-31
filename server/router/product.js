@@ -25,7 +25,7 @@ router.post('/product/item', (req, res) => {
   const sql = `INSERT INTO products SET ?`;
   db.query(sql, product, (err, results) => {
     if (err) return res.cc(err)
-    if (results.affectedRows != 1) return res.cc('商品建立失敗')
+    if (results.affectedRows !== 1) return res.cc('商品建立失敗')
     res.cc(0, '商品建立成功')
   })
 })
@@ -36,7 +36,7 @@ router.delete('/product/item', (req, res) => {
   const sql = `DELETE FROM products WHERE item_id=?`
   db.query(sql, item_id, (err, results) => {
     if (err) return res.cc(err)
-    if (results.affectedRows != 1) return res.cc('商品移除失敗')
+    if (results.affectedRows !== 1) return res.cc('商品移除失敗')
     res.cc(0, '商品移除成功')
   })
 })
@@ -51,7 +51,7 @@ router.put('/product/item', (req, res) => {
   product.update_time = formatedDate
   db.query(sql, [product, item_id], (err, results) => {
     if (err) return res.cc(err)
-    if (results.affectedRows != 1) return res.cc('商品更新失敗')
+    if (results.affectedRows !== 1) return res.cc('商品更新失敗')
     res.send({
       status: 0,
       message: '商品更新成功'

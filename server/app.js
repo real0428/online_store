@@ -7,6 +7,7 @@ const newsCateRouter = require('./router/news_categories')
 const productRouter = require('./router/product')
 const newsRouter = require('./router/news')
 const commentRouter = require('./router/comment')
+const cartRouter = require('./router/cart')
 require('dotenv').config();
 
 const app = express()
@@ -33,6 +34,7 @@ app.use('/api', newsCateRouter)
 app.use('/api', productRouter)
 app.use('/api', newsRouter)
 app.use('/api', commentRouter)
+app.use('/api', cartRouter)
 
 // 錯誤處理中間件
 app.use((err, req, res, next) => {

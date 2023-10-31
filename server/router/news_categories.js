@@ -55,7 +55,7 @@ router.put('/news/categories', (req, res) => {
   const sql = `UPDATE news_categories SET name=?, parent_id=? WHERE type_id=?`
   db.query(sql, [name, parent_id, type_id], (err, results) => {
     if (err) return res.cc(err)
-    if (results.affectedRows != 1) return res.cc('分類更新失敗')
+    if (results.affectedRows !== 1) return res.cc('分類更新失敗')
     res.cc(0, '分類更新成功')
   })
 })

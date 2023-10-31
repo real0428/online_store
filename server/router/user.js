@@ -16,7 +16,7 @@ router.post('/user/register', (req, res) => {
     const sql = `INSERT INTO users SET ?`
     db.query(sql, { username: userInfo.username, password: userInfo.password }, (err, results) => {
       if (err) return res.cc(err)
-      if (results.affectedRows != 1) return res.cc('註冊失敗!')
+      if (results.affectedRows !== 1) return res.cc('註冊失敗!')
       res.cc('註冊成功!', 0)
     })
   })
@@ -68,7 +68,7 @@ router.put('/user/info', authMiddleWare, (req, res) => {
   const sql = `UPDATE users SET ? WHERE id=?`
   db.query(sql, [{ nickname, email, user_pic }, id], (err, results) => {
     if (err) return res.cc(err)
-    if (results.affectedRows != 1) return res.cc('資料更新失敗')
+    if (results.affectedRows !== 1) return res.cc('資料更新失敗')
     res.cc(0, '資料更新成功')
   })
 })

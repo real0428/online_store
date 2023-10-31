@@ -17,7 +17,7 @@ router.post('/business_user/register', (req, res) => {
     const sql = `INSERT INTO business_users SET ?`
     db.query(sql, userInfo, (err, results) => {
       if (err) return res.cc(err)
-      if (results.affectedRows != 1) return res.cc('建立失敗')
+      if (results.affectedRows !== 1) return res.cc('建立失敗')
       res.send({
         status: 0,
         message: '建立成功'
@@ -73,7 +73,7 @@ router.put('/business_user/info', authMiddleWare, (req, res) => {
   const sql = `UPDATE business_users SET ? WHERE id=?`
   db.query(sql, [{ nickname, email, user_pic }, id], (err, results) => {
     if (err) return res.cc(err)
-    if (results.affectedRows != 1) return res.cc('資料更新失敗')
+    if (results.affectedRows !== 1) return res.cc('資料更新失敗')
     res.cc(0, '資料更新成功')
   })
 })

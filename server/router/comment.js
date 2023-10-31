@@ -43,7 +43,7 @@ router.post('/product/comment', (req, res) => {
   const sql = `INSERT INTO comments SET ?`
   db.query(sql, comment, (err, results) => {
     if (err) return res.cc(err)
-    if (results.affectedRows != 1) return res.cc('建立失敗')
+    if (results.affectedRows !== 1) return res.cc('建立失敗')
     res.send({
       status: 0,
       message: '建立成功',
