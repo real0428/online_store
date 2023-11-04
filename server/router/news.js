@@ -1,14 +1,16 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../db')
+const authMiddleWare = require('../middleware/auth')
 const moment = require('moment')
 
 // 取得單一或多個消息資訊
 router.get('/news/post', (req, res) => {
-  const { item_id } = req.body
+  const { owner_id } = req.body
+  const { item_id } = req.query
   let sql = 'SELECT * FROM news'
-  if (item_id) sql = `SELECT * FROM news WHERE item_id=?`
-  db.query(sql, item_id, (err, results) => {
+  if (item_id) sql = `SELECT * FROM news WHERE item_id=? AND owner_id=?`
+  db.query(sql, [item_id, owner_id], (err, results) => {
     if (err) return res.cc(err)
     if (results.length < 1) return res.cc('消息查詢失敗')
     res.send({
@@ -20,8 +22,12 @@ router.get('/news/post', (req, res) => {
 })
 
 // 建立消息
-router.post('/news/post', (req, res) => {
-  const product = req.body
+router.post('/news/post', authMiddleWare, (req, res) => {
+  const { id } = req.auth
+  const product = {
+    ...req.body,
+    owner_id: id
+  }
   const sql = `INSERT INTO news SET ?`;
   db.query(sql, product, (err, results) => {
     if (err) return res.cc(err)
@@ -31,10 +37,11 @@ router.post('/news/post', (req, res) => {
 })
 
 // 移除消息
-router.delete('/news/post', (req, res) => {
+router.delete('/news/post', authMiddleWare, (req, res) => {
+  const { id } = req.auth
   const { item_id } = req.body
-  const sql = `DELETE FROM news WHERE item_id=?`
-  db.query(sql, item_id, (err, results) => {
+  const sql = `DELETE FROM news WHERE item_id=? AND owner_id=?`
+  db.query(sql, [item_id, id], (err, results) => {
     if (err) return res.cc(err)
     if (results.affectedRows !== 1) return res.cc('消息移除失敗')
     res.cc(0, '消息移除成功')
@@ -42,14 +49,14 @@ router.delete('/news/post', (req, res) => {
 })
 
 // 修改消息資訊
-router.put('/news/post', (req, res) => {
-  const { item_id } = req.body
+router.put('/news/post', authMiddleWare, (req, res) => {
+  const { id } = req.auth
   const product = req.body
-  const sql = `UPDATE news SET ? WHERE item_id=?`
+  const sql = `UPDATE news SET ? WHERE item_id=? AND owner_id=?`
   const currentDate = moment()
   const formatedDate = currentDate.format('YYYY-MM-DD HH:mm')
   product.update_time = formatedDate
-  db.query(sql, [product, item_id], (err, results) => {
+  db.query(sql, [product, product.item_id, id], (err, results) => {
     if (err) return res.cc(err)
     if (results.affectedRows !== 1) return res.cc('消息更新失敗')
     res.send({
