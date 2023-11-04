@@ -51,8 +51,8 @@ router.post('/business_user/login', (req, res) => {
 
 //取得賣家用戶資料
 router.get('/business_user/info', authMiddleWare, (req, res) => {
-  const sql = `SELECT * FROM business_users WHERE id=?`
   const { id } = req.auth
+  const sql = `SELECT * FROM business_users WHERE id=?`
   db.query(sql, id, (err, results) => {
     if (err) return res.status(403).cc(err)
     if (results.length !== 1) return res.status(401).cc('無訪問權限')
@@ -73,8 +73,8 @@ router.put('/business_user/info', authMiddleWare, (req, res) => {
   const sql = `UPDATE business_users SET ? WHERE id=?`
   db.query(sql, [{ nickname, email, user_pic }, id], (err, results) => {
     if (err) return res.cc(err)
-    if (results.affectedRows !== 1) return res.cc('資料更新失敗')
-    res.cc(0, '資料更新成功')
+    if (results.affectedRows !== 1) return res.cc('更新失敗')
+    res.cc(0, '更新成功')
   })
 })
 
@@ -92,8 +92,8 @@ router.put('/business_user/pwd', authMiddleWare, (req, res) => {
     const sql = `UPDATE business_users SET password=? WHERE id=?`
     db.query(sql, [newpwd, id], (err, results) => {
       if (err) return res.cc(err)
-      if (results.affectedRows !== 1) return res.cc('密碼更新失敗')
-      res.cc(0, '密碼更新成功')
+      if (results.affectedRows !== 1) return res.cc('更新失敗')
+      res.cc(0, '更新成功')
     })
   })
 })
