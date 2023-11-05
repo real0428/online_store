@@ -3,15 +3,15 @@ const router = express.Router()
 const db = require('../db')
 
 // 取得評論
-router.get('/product/comment', (req, res) => {
-  const { product_id } = req.body
+router.get('/product/:product_id/comment', (req, res) => {
+  const { product_id } = req.params
   const sql = `SELECT * FROM comments WHERE product_id=?`
   db.query(sql, product_id, (err, results) => {
     if (err) return res.cc(err)
     if (!results.length) return res.cc('查詢失敗')
-    // 存放評論的父資料
+    // 存放父層評論
     const comments = []
-    // 存放評論的子資料
+    // 存放子層評論
     const commentMap = {}
 
     results.forEach((item) => {
