@@ -39,12 +39,11 @@ router.delete('/news/categories', authMiddleWare, (req, res) => {
   })
 })
 
-// 取得所有消息分類
-router.get('/news/categories', authMiddleWare, (req, res) => {
-  const { id } = req.auth;
-  console.log(id);
+// 取得賣家所有消息分類
+router.get('/news/categories', (req, res) => {
+  const { owner_id } = req.query
   const sql = `SELECT * FROM news_categories WHERE owner_id=?`
-  db.query(sql, id, (err, results) => {
+  db.query(sql, owner_id, (err, results) => {
     if (err) return res.cc(err)
 
     // 存放父層分類
