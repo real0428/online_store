@@ -4,15 +4,29 @@ const db = require('../db')
 const authMiddleWare = require('../middleware/auth')
 const moment = require('moment')
 
-// 取得單一或多個消息資訊
+// 查詢特定賣家所有消息
 router.get('/news/post', (req, res) => {
-  const { owner_id } = req.body
-  const { item_id } = req.query
-  let sql = 'SELECT * FROM news'
-  if (item_id) sql = `SELECT * FROM news WHERE item_id=? AND owner_id=?`
-  db.query(sql, [item_id, owner_id], (err, results) => {
+  const { owner_id } = req.query
+  let sql = `SELECT * FROM news WHERE owner_id=?`
+  db.query(sql, owner_id, (err, results) => {
     if (err) return res.cc(err)
-    if (results.length < 1) return res.cc('消息查詢失敗')
+    if (results.length < 1) return res.cc('查無資料')
+    res.send({
+      status: 0,
+      message: '消息查詢成功',
+      data: results
+    })
+  })
+})
+
+// 查詢特定賣家特定消息
+router.get('/news/post/:id', (req, res) => {
+  const { owner_id } = req.query
+  const { id } = req.params
+  let sql = `SELECT * FROM news WHERE item_id=? AND owner_id=?`
+  db.query(sql, [id, owner_id], (err, results) => {
+    if (err) return res.cc(err)
+    if (results.length < 1) return res.cc('查無資料')
     res.send({
       status: 0,
       message: '消息查詢成功',
