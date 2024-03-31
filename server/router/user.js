@@ -29,7 +29,7 @@ router.post('/user/login', (req, res) => {
   db.query(sql, username, (err, results) => {
     if (results.length === 0) return res.status(422).cc('用戶不存在')
     const compareResult = bycript.compareSync(password, results[0].password)
-    if (!compareResult) return res.cc('密碼錯誤')
+    if (!compareResult) return res.status(401).cc('密碼錯誤')
     const user = {
       ...results[0],
       password: '',
