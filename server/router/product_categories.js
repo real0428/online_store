@@ -40,37 +40,31 @@ router.delete('/product/categories', authMiddleWare, (req, res) => {
 })
 
 //取得賣家所有產品分類
-router.get('/product/categories', (req, res) => {
+router.get('/product/categories', authMiddleWare, (req, res) => {
   const { owner_id } = req.query
-  const sql = `SELECT * FROM product_categories WHERE owner_id=?`
-  db.query(sql, owner_id, (err, results) => {
+  const { id } = req.auth
+  const sql = `
+    SELECT 
+      t1.type_id,
+      t1.name,
+      t1.parent_id,
+      t1.owner_id,
+      t2.name AS parent_name
+    FROM 
+      product_categories t1
+      LEFT JOIN product_categories t2 ON t1.parent_id = t2.type_id
+    WHERE 
+      t1.owner_id = ?
+  `;
+
+
+  db.query(sql, id, (err, results) => {
     if (err) return res.cc(err)
-
-    // 存放父層分類
-    const categories = []
-    // 存放子層分類
-    const categoriesMap = {}
-
-    results.forEach(item => {
-      if (item.parent_id) {
-        if (!categoriesMap[item.parent_id]) {
-          categoriesMap[item.parent_id] = { children: [] }
-        }
-        categoriesMap[item.parent_id].children.push(item)
-      } else {
-        categories.push(item)
-      }
-    })
-
-    const response = categories.map((item) => ({
-      ...item,
-      children: categoriesMap[item.type_id]?.children || []
-    }))
 
     res.send({
       status: 0,
       message: '查詢成功',
-      data: response
+      data: results
     })
   })
 })
@@ -83,7 +77,7 @@ router.put('/product/categories', authMiddleWare, (req, res) => {
   db.query(sql, [name, parent_id, type_id, id], (err, results) => {
     if (err) return res.cc(err)
     if (results.affectedRows !== 1) return res.cc('更新失敗')
-    res.cc(0, '更新成功')
+    res.cc('更新成功', 0)
   })
 })
 
