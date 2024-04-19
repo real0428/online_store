@@ -6,9 +6,19 @@ const db = require('../db')
 // 查詢購物車
 router.get('/cart', authMiddleWare, (req, res) => {
   const { id } = req.auth
-  const sql = `SELECT * FROM shopping_cart WHERE user_id=?`
+
+  const sql = `SELECT cart.*, products.stock
+  FROM shopping_cart AS cart 
+  INNER JOIN products ON cart.item_id = products.item_id 
+  WHERE cart.user_id=?`
+
   db.query(sql, id, (err, results) => {
     if (err) return res.cc(err)
+    results = results.map((item) => {
+      const { amount, stock } = item
+      item.insufficientStock = stock > amount
+      return item
+    })
     res.send({
       status: 0,
       message: '查詢成功',
@@ -25,7 +35,7 @@ router.post('/cart', authMiddleWare, (req, res) => {
   db.query(sql, [item_id, id], (err, cartItemRes) => {
     if (err) return res.cc(err)
     // 查看商品是否有庫存
-    const sql = `SELECT quantity FROM products WHERE item_id=?`
+    const sql = `SELECT stock FROM products WHERE item_id=?`
     db.query(sql, item_id, (err, productRes) => {
       if (err) return res.cc(err)
       if (!productRes.length) {
@@ -35,7 +45,6 @@ router.post('/cart', authMiddleWare, (req, res) => {
           ...req.body,
           user_id: id,
         }
-        console.log(cartItem);
         // 當使用者的購物車沒有這項商品
         if (!cartItemRes.length) {
           const sql = `INSERT INTO shopping_cart SET ?`
@@ -44,10 +53,10 @@ router.post('/cart', authMiddleWare, (req, res) => {
             if (results.affectedRows !== 1) return res.cc('無法加入購物車，請聯絡管理員')
             res.cc(0, '已加入購物車')
           })
-          // 當使用者的購物車已有這項商品
+          // 當使用者的購物車有這項商品時
         } else {
           const amount = cartItemRes[0].amount + parseInt(cartItem.amount, 10)
-          if (productRes[0].quantity < amount) {
+          if (productRes[0].stock < amount) {
             return res.cc('抱歉，商品庫存不足')
           }
 
