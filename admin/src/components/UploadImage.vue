@@ -1,6 +1,6 @@
 <template>
   <el-upload class="avatar-uploader" :auto-upload="false" :on-change="getFile" action="#" :show-file-list="false"
-    :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+    :on-success="handleAvatarSuccess">
     <img v-if="imageUrl" :src="imageUrl" class="avatar" />
     <el-icon v-else class="avatar-uploader-icon">
       <Plus />
@@ -17,6 +17,10 @@ import type { UploadProps } from 'element-plus'
 const emit = defineEmits(['get-file'])
 
 const props = defineProps({
+  index: {
+    type: Number,
+    default: 0
+  },
   image: {
     type: String,
     default: ''
@@ -32,7 +36,7 @@ watch(() => props.image, (image) => {
 const getFile = (file: any) => {
   const objectURL = URL.createObjectURL(file.raw)
   imageUrl.value = objectURL
-  emit('get-file', file.raw)
+  emit('get-file', file.raw, props.index)
 }
 
 const handleAvatarSuccess: UploadProps['onSuccess'] = (
