@@ -2,27 +2,27 @@
   <div>
     <h1 class="mb-6">{{ id ? '編輯' : '建立' }}商品</h1>
     <div class="pl-10">
-      <el-row class="flex mb-3">
+      <el-row class="mb-3">
         <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">所屬分類</span>
         <el-select placeholder="請選擇" size="large" style="width: 178px" v-model="typeId">
           <el-option v-for="item in parentOptions" :key="item.type_id" :label="item.name" :value="item.type_id" />
         </el-select>
       </el-row>
-      <el-row class="flex mb-3">
+      <el-row class="mb-3">
         <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品封面</span>
         <UploadImage :image="form.image_url" @get-file="getFile" />
       </el-row>
-      <el-row class="flex mb-3">
+      <el-row class="mb-3">
         <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品名稱</span>
         <el-input maxlength="30" show-word-limit style="width: 500px" size="large" v-model="form.name"
           placeholder="輸入名稱" />
       </el-row>
-      <el-row class="flex mb-3">
+      <el-row class="mb-3">
         <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品簡述</span>
         <el-input maxlength="50" show-word-limit style="width: 500px" size="large" v-model="form.description"
           placeholder="輸入簡述" />
       </el-row>
-      <el-row class="flex mb-3 items-center">
+      <el-row class="mb-3 items-center">
         <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品原價</span>
         <el-input class="mr-1 input-with-select" style="width: 178px" size="large" v-model="form.ori_price"
           placeholder="輸入價格">
@@ -31,7 +31,7 @@
           </template>
         </el-input>
       </el-row>
-      <el-row class="flex mb-3 items-center">
+      <el-row class="mb-3 items-center">
         <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品售價</span>
         <el-input class="mr-1 input-with-select" style="width: 178px" size="large" v-model="form.sale_price"
           placeholder="輸入價格">
@@ -40,7 +40,7 @@
           </template>
         </el-input>
       </el-row>
-      <el-row class="flex mb-3 items-center">
+      <el-row class="mb-3 items-center">
         <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品庫存</span>
         <el-input-number class="mr-1 input-with-select" style="width: 130px" size="large" type="number"
           v-model="form.stock" placeholder="輸入價格">
@@ -49,7 +49,7 @@
           </template>
         </el-input-number>
       </el-row>
-      <el-row class="flex mb-3">
+      <el-row class="mb-3">
         <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品介紹</span>
         <div class="max-w-[600px]">
           <PostEditor ref="editor" v-model:content="form.body" />
@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { getProductCategories } from '@/api/product/category'
 import { createProduct, getProductInfo, updateProductInfo } from '@/api/product/product'
 import { ElMessage } from "element-plus"
@@ -71,7 +71,7 @@ import PostEditor from '@/components/PostEditor.vue'
 
 const props = defineProps({
   id: {
-    type: Number,
+    type: String,
     default: ''
   }
 })
@@ -129,21 +129,29 @@ const fetchProductInfo = async (id: number) => {
   })
 }
 
+const editor = ref()
+
 // 監聽二級分類id，如果id為null，表示新建分類
 watch(() => props.id, (id) => {
   if (!id) {
+
     input.value = ''
     typeId.value = ''
-    form.name = ''
-    form.description = ''
-    form.image = {}
-    form.image_url = ''
-    form.ori_price = null
-    form.sale_price = null
-    form.stock = 0
-    form.body = ''
-    form.type_id = typeId.value
-    form.is_active = 0
+
+    Object.assign(form, {
+      name: '',
+      description: '',
+      image: {},
+      image_url: '',
+      ori_price: null,
+      sale_price: null,
+      stock: 0,
+      body: '',
+      type_id: typeId.value,
+      is_active: 0
+    })
+    editor.value?.resetEditor()
+
   } else {
     fetchProductInfo(Number(id))
   }
@@ -160,7 +168,7 @@ const getFile = (f: RawFile) => {
 const save = () => {
   // 編輯
   if (props.id) {
-    form.item_id = props.id
+    form.item_id = Number(props.id)
     form.is_active = 0
     updateProductInfo(form).then((res: { message: any }) => {
       ElMessage({
