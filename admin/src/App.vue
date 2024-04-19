@@ -6,4 +6,10 @@
 import { RouterView } from 'vue-router'
 </script>
 
-<style scoped></style>
+<style>
+html,
+body,
+#app {
+  @apply w-full h-full
+}
+</style>
