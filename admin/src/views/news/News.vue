@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, withDefaults } from 'vue'
 import { getNewsCategories } from '@/api/news/category'
 import { createNews, getNewsInfo, updateNews } from '@/api/news/news'
 import { ElMessage } from "element-plus"
@@ -42,7 +42,9 @@ import { useRouter } from 'vue-router'
 import UploadImage from '@/components/UploadImage.vue'
 import PostEditor from '@/components/PostEditor.vue'
 
-const props = defineProps<{ id: number }>()
+const props = withDefaults(defineProps<{ id?: string }>(), {
+  id: ''
+})
 
 interface Category {
   type_id: number,
@@ -115,7 +117,8 @@ watch(() => props.id, (id) => {
       item_id: 0
     })
 
-    editor.value?.setHTML('')
+    editor.value?.resetEditor()
+
   } else {
     fetchNewsInfo(Number(id))
   }
@@ -132,7 +135,7 @@ const getFile = (f: RawFile) => {
 const save = () => {
   // 編輯
   if (props.id) {
-    form.item_id = props.id
+    form.item_id = Number(props.id)
     form.is_active = 0
     updateNews(form).then(res => {
       ElMessage({
