@@ -1,6 +1,6 @@
 <template>
-  <h1 class="mb-6">文章列表</h1>
-  <el-table :data="news" style="width: 100%">
+  <h1 class="mb-6">新聞列表</h1>
+  <el-table empty-text="查無資料" :data="news" style="width: 100%">
     <el-table-column prop="item_id" label="ID" width="100" />
     <el-table-column prop="img_url" label="縮圖" width="180">
       <template #default="scope">
@@ -84,7 +84,6 @@ const handleDelete = async (news: any) => {
       fetchNewsList()
     })
   }).catch((err) => { })
-
 }
 
 onMounted(async () => {

@@ -12,6 +12,7 @@ router.post('/news/categories', authMiddleWare, (req, res) => {
   db.query(sql, [name, parent_id, id], (err, results) => {
     if (err) return res.cc(err)
     if (results.affectedRows !== 1) return res.cc('建立失敗')
+    console.log(results)
     res.send({
       status: 0,
       message: '建立成功'
