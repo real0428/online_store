@@ -1,89 +1,152 @@
 <template>
-  <el-container class="layout-container-demo">
-    <el-aside width="200px">
+  <el-container class="layout-container-demo bg-gray-50 h-full">
+    <el-aside width="260px" class="bg-white px-3 py-10">
       <el-scrollbar>
-        <el-menu :default-openeds="['1', '3']">
-          <el-sub-menu index="1">
+        <div class="text-xl font-bold text-center mb-4">
+          <font-awesome-icon class="mr-1 text-gray-900" :icon="['fas', 'gear']" />後台管理系統
+        </div>
+        <el-menu :default-openeds="[menuIndex]" class="!border-r-0" @open="handleMenuIndex" :unique-opened="true">
+          <el-menu-item index="1">
             <template #title>
-              <el-icon> <message /> </el-icon>Navigator One
+              <router-link class="w-full flex items-center" to="/user_info">
+                <font-awesome-icon class="mr-1" :icon="['fas', 'pen-to-square']" />個人資料管理
+              </router-link>
             </template>
-            <el-menu-item-group>
-              <template #title>Group 1</template>
-              <el-menu-item index="1-1">Option 1</el-menu-item>
-              <el-menu-item index="1-2">Option 2</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="Group 2">
-              <el-menu-item index="1-3">Option 3</el-menu-item>
-            </el-menu-item-group>
-            <el-sub-menu index="1-4">
-              <template #title>Option4</template>
-              <el-menu-item index="1-4-1">Option 4-1</el-menu-item>
-            </el-sub-menu>
-          </el-sub-menu>
+          </el-menu-item>
           <el-sub-menu index="2">
             <template #title>
-              <el-icon><icon-menu /></el-icon>Navigator Two
+              <font-awesome-icon class="mr-1" :icon="['fas', 'bag-shopping']" />廣告管理
             </template>
             <el-menu-item-group>
-              <template #title>Group 1</template>
-              <el-menu-item index="2-1">Option 1</el-menu-item>
-              <el-menu-item index="2-2">Option 2</el-menu-item>
+              <el-menu-item index="2-1" :class="{ 'active': route.name === 'ad_categories' }">
+                <router-link class="w-full flex items-center" to="/ad/create">
+                  建立廣告
+                </router-link>
+              </el-menu-item>
+              <el-menu-item index="2-2" :class="{ 'active': route.name === 'ad_list' }">
+                <router-link class="w-full flex items-center" to="/ad/list">
+                  廣告列表
+                </router-link>
+              </el-menu-item>
             </el-menu-item-group>
-            <el-menu-item-group title="Group 2">
-              <el-menu-item index="2-3">Option 3</el-menu-item>
-            </el-menu-item-group>
-            <el-sub-menu index="2-4">
-              <template #title>Option 4</template>
-              <el-menu-item index="2-4-1">Option 4-1</el-menu-item>
-            </el-sub-menu>
           </el-sub-menu>
           <el-sub-menu index="3">
             <template #title>
-              <el-icon> <setting /> </el-icon>Navigator Three
+              <font-awesome-icon class="mr-1" :icon="['fas', 'bag-shopping']" /> 商品管理
             </template>
             <el-menu-item-group>
-              <template #title>Group 1</template>
-              <el-menu-item index="3-1">Option 1</el-menu-item>
-              <el-menu-item index="3-2">Option 2</el-menu-item>
+              <el-menu-item index="3-1" :class="{ 'active': route.name === 'product_categories' }">
+                <router-link class="w-full flex items-center" to="/product/categories">
+                  建立分類
+                </router-link>
+              </el-menu-item>
+              <el-menu-item index="3-2" :class="{ 'active': route.name === 'product_categories_list' }">
+                <router-link class="w-full flex items-center" to="/product/categories_list">
+                  分類列表
+                </router-link>
+              </el-menu-item>
+              <el-menu-item index="3-3" :class="{ 'active': route.name === 'product_list' }">
+                <router-link class="w-full flex items-center" to="/product/list">
+                  產品列表
+                </router-link>
+              </el-menu-item>
+              <el-menu-item index="3-4" :class="{ 'active': route.name === 'product' }">
+                <router-link class="w-full flex items-center" to="/product/product">
+                  建立產品
+                </router-link>
+              </el-menu-item>
             </el-menu-item-group>
-            <el-menu-item-group title="Group 2">
-              <el-menu-item index="3-3">Option 3</el-menu-item>
+          </el-sub-menu>
+          <el-sub-menu index="4">
+            <template #title>
+              <font-awesome-icon class="mr-1" :icon="['far', 'file-lines']" />新聞管理
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="4-1" :class="{ 'active': route.name === 'news_categories' }">
+                <router-link class="w-full flex items-center" to="/news/categories">
+                  建立分類
+                </router-link>
+              </el-menu-item>
+              <el-menu-item index="4-2" :class="{ 'active': route.name === 'news_categories_list' }">
+                <router-link class="w-full flex items-center" to="/news/categories_list">
+                  分類列表
+                </router-link>
+              </el-menu-item>
+              <el-menu-item index="4-3" :class="{ 'active': route.name === 'news_list' }">
+                <router-link class="w-full flex items-center" to="/news/list">
+                  文章列表
+                </router-link>
+              </el-menu-item>
+              <el-menu-item index="4-4" :class="{ 'active': route.name === 'news' }">
+                <router-link class="w-full flex items-center" to="/news/news">
+                  建立文章
+                </router-link>
+              </el-menu-item>
             </el-menu-item-group>
-            <el-sub-menu index="3-4">
-              <template #title>Option 4</template>
-              <el-menu-item index="3-4-1">Option 4-1</el-menu-item>
-            </el-sub-menu>
+          </el-sub-menu>
+          <el-sub-menu index="5">
+
+            <template #title>
+              <font-awesome-icon class="mr-1" :icon="['fas', 'cart-shopping']" />訂單管理
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="5-1" :class="{ 'active': route.name === 'order_list' }">
+                <router-link class="w-full flex items-center" to="/order/list">
+                  訂單列表
+                </router-link>
+              </el-menu-item>
+              <el-menu-item index="5-1" :class="{ 'active': route.name === 'order' }">
+                <router-link class="w-full flex items-center" to="/order/order">
+                  訂單詳情
+                </router-link>
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-sub-menu>
+          <el-sub-menu index="6">
+
+            <template #title>
+              <font-awesome-icon class="mr-1" :icon="['far', 'user']" />會員管理
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="6-1" :class="{ 'active': route.name === 'member_list' }">
+                <router-link class="w-full flex items-center" to="/member/list">
+                  會員列表
+                </router-link>
+              </el-menu-item>
+              <el-menu-item index="6-2" :class="{ 'active': route.name === 'member_info' }">
+                <router-link class="w-full flex items-center" to="/member/info">
+                  會員詳情
+                </router-link>
+              </el-menu-item>
+            </el-menu-item-group>
           </el-sub-menu>
         </el-menu>
       </el-scrollbar>
     </el-aside>
 
-    <el-container>
-      <el-header style="text-align: right; font-size: 12px">
+    <el-container class="p-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.01)]">
+      <el-header class="!p-3 flex items-center justify-between mb-5">
+        <div class="text-3xl font-bold text-gray-700">{{ title }}</div>
         <div class="toolbar">
-          <el-dropdown>
-            <el-icon style="margin-right: 8px; margin-top: 1px">
-              <setting />
-            </el-icon>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item>View</el-dropdown-item>
-                <el-dropdown-item>Add</el-dropdown-item>
-                <el-dropdown-item>Delete</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-          <span>Tom</span>
+          <div class="user-dropdown-button flex items-center cursor-pointer relative"
+            @click="userDropdownState = !userDropdownState">
+            <el-avatar :size="40" class="mr-2" :src="user.user_pic" />
+            <div class=" hover:opacity-60 duration-300 ease-in-out">
+              <span class="text-gray-800">{{ user.nickname || user.username }}</span>
+              <font-awesome-icon class="text-gray-600 ml-1 text-sm" :icon="['fas', 'angle-down']" />
+            </div>
+            <transition name="user">
+              <div v-show="userDropdownState"
+                class="shadow-sm inline-block px-5 py-1 rounded bg-white text-gray-800 absolute right-0 top-14"
+                @click="logout">登出
+              </div>
+            </transition>
+          </div>
         </div>
       </el-header>
-
-      <el-main>
-        <el-scrollbar>
-          <el-table :data="tableData">
-            <el-table-column prop="date" label="Date" width="140" />
-            <el-table-column prop="name" label="Name" width="120" />
-            <el-table-column prop="address" label="Address" />
-          </el-table>
+      <el-main class="bg-white rounded !p-0">
+        <el-scrollbar class="p-6">
+          <router-view></router-view>
         </el-scrollbar>
       </el-main>
     </el-container>
@@ -91,42 +154,107 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
+import { useRoute } from 'vue-router'
+import { onMounted, ref, watch, onUnmounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useUserInfoStore, useAuthStore } from '@/stores/user'
 
-const item = {
-  date: '2016-05-02',
-  name: 'Tom',
-  address: 'No. 189, Grove St, Los Angeles'
+const title = ref<string>('')
+const menuIndex = ref<string>('')
+
+const handleMenuIndex = (index: string): void => {
+  menuIndex.value = index
 }
-const tableData = ref(Array.from({ length: 20 }).fill(item))
+
+const updateTitle = (): string => {
+  switch (menuIndex.value) {
+    case '1':
+      return '廣告管理'
+    case '2':
+      return '個人資料管理'
+    case '3':
+      return '商品管理'
+    case '4':
+      return '新聞管理'
+    case '5':
+      return '訂單管理'
+    case '6':
+      return '會員管理'
+    default:
+      return '歡迎回來! 立斌。'
+  }
+}
+
+const route = useRoute()
+watch(() => route.name, (name) => {
+  if (name === 'hero_banner_edit') menuIndex.value = '1'
+  else if (name === 'user_info') menuIndex.value = '2'
+  else if (name?.toString().includes('product')) menuIndex.value = '3'
+  else if (name?.toString().includes('news')) menuIndex.value = '4'
+  else if (name?.toString().includes('order')) menuIndex.value = '5'
+  else if (name?.toString().includes('member')) menuIndex.value = '6'
+  else menuIndex.value = ''
+
+  title.value = updateTitle()
+}, {
+  immediate: true,
+})
+
+const userInfo = useUserInfoStore()
+const { user } = storeToRefs(userInfo)
+
+const userDropdownState = ref(false)
+const closeDropdown = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+  if (!target.closest('.user-dropdown-button')) {
+    userDropdownState.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', closeDropdown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', closeDropdown)
+})
+
+const logout = () => {
+  const { clearToken } = useAuthStore()
+  clearToken()
+}
+
 </script>
 
-<style scoped>
-.layout-container-demo .el-header {
-  position: relative;
-  background-color: var(--el-color-primary-light-7);
-  color: var(--el-text-color-primary);
+<style scoped lang="scss">
+.el-menu-item:hover {
+  @apply bg-green-50
 }
 
-.layout-container-demo .el-aside {
-  color: var(--el-text-color-primary);
-  background: var(--el-color-primary-light-8);
+.el-sub-menu :deep(.el-sub-menu__title):hover {
+  @apply bg-green-50
 }
 
-.layout-container-demo .el-menu {
-  border-right: none;
+.el-menu :deep(.el-menu-item-group__title) {
+  display: none;
 }
 
-.layout-container-demo .el-main {
-  padding: 0;
+.el-menu-item.is-active {
+  color: unset
 }
 
-.layout-container-demo .toolbar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  right: 20px;
+.el-menu-item.active {
+  @apply text-green-700 bg-green-50;
+}
+
+.user-enter-active,
+.user-leave-active {
+  transition: all 0.3s ease;
+}
+
+.user-enter-from,
+.user-leave-to {
+  opacity: 0;
+  transform: translateY(-20px)
 }
 </style>
