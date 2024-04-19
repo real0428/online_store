@@ -1,10 +1,10 @@
 <template>
-  <QuillEditor :modules="[uploadModule]" placeholder="輸入內容" class="break-all !h-auto min-h-[500px]"
+  <QuillEditor ref="editor" :modules="[uploadModule]" placeholder="輸入內容" class="break-all !h-auto min-h-[500px]"
     :toolbar="toolbarOptions" theme="snow" contentType="html" />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import ImageUploader from 'quill-image-uploader'
 import { Quill } from '@vueup/vue-quill'
 import { uploadImage } from '@/api/upload/image'
@@ -61,6 +61,15 @@ const uploadModule = ref({
       })
     }
   }
+})
+
+const editor = ref()
+const resetEditor = () => {
+  editor.value.setHTML('')
+}
+
+defineExpose({
+  resetEditor
 })
 
 </script>
