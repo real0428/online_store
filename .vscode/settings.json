@@ -1,0 +1,6 @@
+{
+  "editor.fontLigatures": false,
+  "css.customData": [
+    ".vscode/tailwind.json"
+  ]
+}
