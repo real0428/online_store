@@ -8,13 +8,15 @@ const productRouter = require('./router/product')
 const newsRouter = require('./router/news')
 const commentRouter = require('./router/comment')
 const cartRouter = require('./router/cart')
+const uploadImageRouter = require('./router/upload_image')
+const adRouter = require('./router/ad')
 require('dotenv').config();
 
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cors());
-app.use('public', express.static('public'))
+app.use('/uploads', express.static(__dirname + '/uploads'))
 
 // 訊息回應中間件
 app.use((req, res, next) => {
@@ -35,10 +37,15 @@ app.use('/api', productRouter)
 app.use('/api', newsRouter)
 app.use('/api', commentRouter)
 app.use('/api', cartRouter)
+app.use('/api', uploadImageRouter)
+app.use('/api', adRouter)
 
 // 錯誤處理中間件
 app.use((err, req, res, next) => {
-  if (err.name === 'UnauthorizedError') return res.cc('身份認證失敗')
+  console.log(err);
+  if (err.name === 'UnauthorizedError') {
+    return res.status(401).cc('權限不足')
+  }
   return res.cc(err)
 })
 
