@@ -95,11 +95,6 @@
                   訂單列表
                 </router-link>
               </el-menu-item>
-              <el-menu-item index="5-1" :class="{ 'active': route.name === 'order' }">
-                <router-link class="w-full flex items-center" to="/order/order">
-                  訂單詳情
-                </router-link>
-              </el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="6">
@@ -111,11 +106,6 @@
               <el-menu-item index="6-1" :class="{ 'active': route.name === 'member_list' }">
                 <router-link class="w-full flex items-center" to="/member/list">
                   會員列表
-                </router-link>
-              </el-menu-item>
-              <el-menu-item index="6-2" :class="{ 'active': route.name === 'member_info' }">
-                <router-link class="w-full flex items-center" to="/member/info">
-                  會員詳情
                 </router-link>
               </el-menu-item>
             </el-menu-item-group>
