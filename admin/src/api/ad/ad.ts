@@ -3,14 +3,24 @@ import request from "../../utils/request"
 
 export const getAdList = async () => request.get('/ads')
 
-export const uploadAd = async (Ad: AdData) => {
-  console.log(Ad)
+export const getAd = async (id: string) => request({
+  url: `/ad?type_id=${id}`
+})
+
+export const uploadAd = async (ad: AdData) => {
   return request({
     url: '/ad',
     method: 'post',
-    data: {
-      ...Ad
-    }
+    data: ad
+  })
+}
+
+export const updateAd = async (ad: AdData) => {
+  console.log(ad)
+  return request({
+    url: '/ad',
+    method: 'put',
+    data: ad
   })
 }
 

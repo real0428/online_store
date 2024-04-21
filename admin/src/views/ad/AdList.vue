@@ -5,7 +5,7 @@
     <el-table-column prop="type_name" label="分類名稱" />
     <el-table-column label="操作">
       <template #default="scope">
-        <el-button type="primary" @click="handleEdit(scope.row.item_id)">編緝</el-button>
+        <el-button type="primary" @click="handleEdit(scope.row.type_id)">編緝</el-button>
         <el-button type="danger" @click="handleDelete(scope.row)">刪除</el-button>
       </template>
     </el-table-column>
@@ -19,13 +19,13 @@ import { getAdList, deleteAd } from "@/api/ad/ad"
 import { ElMessage, ElMessageBox } from "element-plus"
 
 const router = useRouter()
-
 const ads = ref()
 
 const handleEdit = (id: number) => {
+  console.log(id)
   router.push({
-    name: 'news_edit',
-    path: `/news/edit`,
+    name: 'ad_edit',
+    path: `/ad/edit`,
     params: {
       id
     }
@@ -66,7 +66,6 @@ const fetchAdList = async () => {
 }
 
 onMounted(() => fetchAdList())
-
 
 
 </script>

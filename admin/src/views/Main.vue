@@ -187,14 +187,13 @@ const updateTitle = (): string => {
 
 const route = useRoute()
 watch(() => route.name, (name) => {
-  if (name === 'hero_banner_edit') menuIndex.value = '1'
+  if (name?.toString().includes('ad')) menuIndex.value = '1'
   else if (name === 'user_info') menuIndex.value = '2'
   else if (name?.toString().includes('product')) menuIndex.value = '3'
   else if (name?.toString().includes('news')) menuIndex.value = '4'
   else if (name?.toString().includes('order')) menuIndex.value = '5'
   else if (name?.toString().includes('member')) menuIndex.value = '6'
   else menuIndex.value = ''
-
   title.value = updateTitle()
 }, {
   immediate: true,

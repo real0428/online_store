@@ -18,15 +18,19 @@ router.get('/ads', authMiddleWare, (req, res) => {
 })
 
 // 查詢單一廣告的資料
-router.get('/ad', (req, res) => {
+router.get('/ad', authMiddleWare, (req, res) => {
   const { type_id } = req.query
   const sql = `SELECT * FROM ad WHERE type_id=?`
   db.query(sql, type_id, (err, results) => {
     if (err) throw new Error(err)
+    const parseResults = {
+      ...results[0],
+      images: JSON.parse(results[0].images)
+    }
     res.send({
       status: 0,
       message: '成功',
-      data: results
+      data: parseResults
     })
   })
 })
@@ -34,11 +38,18 @@ router.get('/ad', (req, res) => {
 // 建立廣告
 router.post('/ad', authMiddleWare, (req, res) => {
   const { id: owner_id } = req.auth
-  const { type_name, ads } = req.body
-
+  const { type_name, images } = req.body
+  if (!type_name) return res.status(403).cc('名稱不得為空')
+  if (!images.length) return res.status(403).cc('至少要有一個廣告內容')
+  for (const image of images) {
+    const { imgUrl, url, description } = image
+    if (!imgUrl || !url || !description) {
+      return res.status(403).cc('廣告欄位不得為空')
+    }
+  }
   const ad = {
     type_name,
-    images: JSON.stringify(ads),
+    images: JSON.stringify(images),
     owner_id
   }
 
@@ -55,10 +66,21 @@ router.post('/ad', authMiddleWare, (req, res) => {
 
 // 編輯廣告
 router.put('/ad', authMiddleWare, (req, res) => {
-  const { owner_id } = req.auth
-  const { type_id, data } = req.body
-  const sql = `UPDATE ad SET ? WHERE type_id=? AND owner_id=? `
-  db.query(sql, [data, type_id, owner_id], (err, results) => {
+  const { type_id, type_name, images } = req.body
+  if (!type_name) return res.status(403).cc('名稱不得為空')
+  if (!images.length) return res.status(403).cc('至少要有一個廣告內容')
+  for (const image of images) {
+    const { imgUrl, url, description } = image
+    if (!imgUrl || !url || !description) {
+      return res.status(403).cc('廣告欄位不得為空')
+    }
+  }
+  const ad = {
+    type_name,
+    images: JSON.stringify(images),
+  }
+  const sql = `UPDATE ad SET ? WHERE type_id=? `
+  db.query(sql, [ad, type_id], (err, results) => {
     if (err) throw new Error(err)
     if (results.affectedRows !== 1) return res.status(403).cc('更新失敗')
     res.send({
@@ -71,7 +93,6 @@ router.put('/ad', authMiddleWare, (req, res) => {
 router.delete('/ad', authMiddleWare, (req, res) => {
   const { id: owner_id } = req.auth
   const { type_id } = req.body
-  console.log(type_id)
   const sql = `DELETE FROM ad WHERE type_id=? AND owner_id=?`
   db.query(sql, [type_id, owner_id], (err, results) => {
     if (err) throw new Error(err)
