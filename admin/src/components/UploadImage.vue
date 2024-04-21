@@ -30,7 +30,10 @@ const props = defineProps({
 const imageUrl = ref('')
 
 watch(() => props.image, (image) => {
+  console.log('image', image)
   imageUrl.value = image
+}, {
+  immediate: true
 })
 
 const getFile = (file: any) => {
