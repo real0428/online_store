@@ -5,6 +5,7 @@ interface AdImage {
 }
 
 interface AdData {
+  type_id?: string
   type_name: string
-  ads: AdImage[]
+  images: AdImage[]
 }
