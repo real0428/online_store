@@ -15,16 +15,17 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(response => {
   return response.data
 }, error => {
-  console.log(error);
   const message = error.response.data.message;
   ElMessage({
     type: 'error',
     message,
   })
-  const { clearToken } = useAuthStore()
-  setTimeout(() => {
-    clearToken()
-  }, 1000)
+  if (error.response.status === 401) {
+    const { clearToken } = useAuthStore()
+    setTimeout(() => {
+      clearToken()
+    }, 1000)
+  }
   return Promise.reject(error)
 })
 
