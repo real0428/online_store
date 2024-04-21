@@ -23,6 +23,12 @@ const router = createRouter({
           component: () => import('@/views/ad/Ads.vue')
         },
         {
+          path: 'ad/edit/:id',
+          name: 'ad_edit',
+          component: () => import('@/views/ad/Ads.vue'),
+          props: true
+        },
+        {
           path: '/ad/list',
           name: 'ad_list',
           component: () => import('@/views/ad/AdList.vue')
