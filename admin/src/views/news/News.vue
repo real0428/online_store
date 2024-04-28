@@ -2,70 +2,82 @@
   <div>
     <h1 class="mb-6">{{ id ? '編輯' : '建立' }}文章</h1>
     <div class="pl-10">
-      <el-row class="flex mb-3">
-        <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">所屬分類</span>
-        <el-select placeholder="請選擇" size="large" style="width: 178px" v-model="typeId">
-          <el-option v-for="item in parentOptions" :key="item.type_id" :label="item.name" :value="item.type_id" />
-        </el-select>
-      </el-row>
-      <el-row class="flex mb-3">
-        <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">文章首圖</span>
-        <UploadImage :image="form.img_url" @get-file="getFile" />
-      </el-row>
-      <el-row class="flex mb-3">
-        <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">文章標題</span>
-        <el-input maxlength="40" show-word-limit style="width: 500px" size="large" v-model="form.title"
-          placeholder="輸入名稱" />
-      </el-row>
-      <el-row class="flex mb-3">
-        <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">文章簡述</span>
-        <el-input maxlength="50" show-word-limit style="width: 500px" size="large" v-model="form.description"
-          placeholder="輸入簡述" />
-      </el-row>
-      <el-row class="flex mb-3 items-start">
-        <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">文章內容</span>
-        <div class="max-w-[600px]">
-          <PostEditor ref="editor" v-model:content="form.body" />
-        </div>
-      </el-row>
-      <el-button type="primary" @click="save">保存</el-button>
+      <el-form :model="form" ref="formRef" :rules="rules">
+        <el-row class="flex mb-3">
+          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">所屬分類</span>
+          <el-form-item prop="type_id">
+            <el-select placeholder="請選擇" size="large" style="width: 178px" v-model="type_id">
+              <el-option v-for="item in parents" :key="item.type_id" :label="item.name" :value="item.type_id" />
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row class="flex mb-3">
+          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">文章首圖</span>
+          <el-form-item prop="image_url">
+            <UploadImage :image="form.img_url" @get-file="getFile" />
+          </el-form-item>
+        </el-row>
+        <el-row class="flex mb-3">
+          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">文章標題</span>
+          <el-form-item prop="title">
+            <el-input maxlength="40" show-word-limit style="width: 500px" size="large" v-model="form.title"
+              placeholder="輸入名稱" />
+          </el-form-item>
+        </el-row>
+        <el-row class="flex mb-3">
+          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">文章簡述</span>
+          <el-form-item prop="description">
+            <el-input maxlength="50" show-word-limit style="width: 500px" size="large" v-model="form.description"
+              placeholder="輸入簡述" />
+          </el-form-item>
+        </el-row>
+        <el-row class="flex mb-3 items-start">
+          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">文章內容</span>
+          <div class="max-w-[600px]">
+            <PostEditor ref="editor" v-model:content="form.body" />
+          </div>
+        </el-row>
+        <el-button type="primary" @click="save(formRef)">保存</el-button>
+      </el-form>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, watch, withDefaults } from 'vue'
+import { ref, reactive, watch, withDefaults, toRefs } from 'vue'
 import { getNewsCategories } from '@/api/news/category'
 import { createNews, getNewsInfo, updateNews } from '@/api/news/news'
 import { ElMessage } from "element-plus"
 import { useRouter } from 'vue-router'
 import UploadImage from '@/components/UploadImage.vue'
 import PostEditor from '@/components/PostEditor.vue'
+import type { FormInstance, FormRules } from 'element-plus'
+import type { Category } from '@/types/category'
 
 const props = withDefaults(defineProps<{ id?: string }>(), {
   id: ''
 })
 
-interface Category {
-  type_id: number,
-  name: string
-  [propName: string]: any
+interface FormData {
+  parents: Category[]
+  item_id: number | number
+  title: string
+  description: string
+  update_time: string
+  image?: object
+  img_url: string
+  body: string
+  type_id: string | number | undefined
+  is_active: number
+  [key: string]: any
 }
 
-interface RawFile {
-  uid: String,
-  name: String,
-  size: Number,
-  type: String,
-  [propName: string]: any
-}
-
-const input = ref<string | undefined>('')
-const typeId = ref<string | number | undefined>('')
-const parentId = ref<string | number>('')
 const router = useRouter()
 
-let form = reactive({
+const formRef = ref<FormInstance>()
+
+let form = reactive<FormData>({
+  parents: [],
   item_id: 0,
   title: '',
   description: '',
@@ -73,20 +85,33 @@ let form = reactive({
   image: {},
   img_url: '',
   body: '',
-  type_id: typeId,
+  type_id: 0,
   is_active: 0
 })
 
-const parentOptions = ref<Array<Category>>([])
-const currentOption = ref<Category | null>()
+const rules = reactive<FormRules>({
+  type_id: [
+    { required: true, message: '分類為必填', trigger: 'blur' }
+  ],
+  image_url: [
+    { required: true, message: '未上傳圖片', trigger: 'blur' }
+  ],
+  title: [
+    { required: true, message: '文章標題為必填', trigger: 'blur' }
+  ],
+  description: [
+    { required: true, message: '文章簡述為必填', trigger: 'blur' }
+  ],
+})
+
+const { type_id, parents } = toRefs(form)
 
 // 取得上級分類
 const fetchParentOptions = async () => {
   const res = await getNewsCategories()
-  parentOptions.value = res.data
-  currentOption.value = parentOptions.value.find((item) => item.type_id === Number(form.type_id))
-  input.value = currentOption.value?.name
-  typeId.value = currentOption.value?.type_id
+  parents.value = res.data
+  const currentOption = parents.value.find((item) => item.type_id === Number(form.type_id))
+  type_id.value = currentOption?.type_id
 }
 
 const fetchNewsInfo = async (id: number) => {
@@ -104,15 +129,15 @@ const editor = ref()
 // 監聽二級分類id，如果id為null，表示新建分類
 watch(() => props.id, (id) => {
   if (!id) {
-    input.value = ''
-    typeId.value = ''
+    type_id.value = ''
     Object.assign(form, {
+      parents: [],
       title: '',
       description: '',
       image: {},
       img_url: '',
       body: '',
-      type_id: typeId.value,
+      type_id: 0,
       is_active: 0,
       item_id: 0
     })
@@ -132,32 +157,36 @@ const getFile = (f: RawFile) => {
 }
 
 // 保存
-const save = () => {
-  // 編輯
-  if (props.id) {
-    form.item_id = Number(props.id)
-    form.is_active = 0
-    updateNews(form).then(res => {
-      ElMessage({
-        type: "success",
-        message: res.message
+const save = (formEl: any) => {
+  if (!formEl) return
+  formEl.validate((valid: boolean) => {
+    if (!valid) return false
+    // 編輯
+    if (props.id) {
+      form.item_id = Number(props.id)
+      form.is_active = 0
+      updateNews(form).then(res => {
+        ElMessage({
+          type: "success",
+          message: res.message
+        })
+        router.push({
+          path: '/news/list'
+        })
       })
-      router.push({
-        path: '/news/list'
+      // 新建
+    } else {
+      createNews(form).then(res => {
+        ElMessage({
+          type: "success",
+          message: res.message
+        })
+        router.push({
+          path: '/news/list'
+        })
       })
-    })
-    // 新建
-  } else {
-    createNews(form).then(res => {
-      ElMessage({
-        type: "success",
-        message: res.message
-      })
-      router.push({
-        path: '/news/list'
-      })
-    })
-  }
+    }
+  })
 }
 </script>
 
