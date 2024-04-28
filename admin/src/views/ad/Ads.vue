@@ -41,6 +41,7 @@
 <script lang="ts" setup>
 import { reactive, toRefs, withDefaults, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import type { AdData } from "@/types/ad"
 import UploadImage from '@/components/UploadImage.vue'
 import { uploadImage } from '@/api/upload/image'
 import { uploadAd, getAd, updateAd } from '@/api/ad/ad'
