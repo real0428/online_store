@@ -1,5 +1,6 @@
 
 import request from "../../utils/request"
+import type { AdData } from "@/types/ad"
 
 export const getAdList = async () => request.get('/ads')
 

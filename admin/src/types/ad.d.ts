@@ -4,7 +4,7 @@ interface AdImage {
   description: string
 }
 
-interface AdData {
+export interface AdData {
   type_id?: string
   type_name: string
   images: AdImage[]
