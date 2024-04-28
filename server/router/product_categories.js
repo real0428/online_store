@@ -6,7 +6,8 @@ const db = require('../db')
 // 新增產品分類
 router.post('/product/categories', authMiddleWare, (req, res) => {
   const { id } = req.auth
-  const { name, parent_id } = req.body
+  let { name, parent_id } = req.body
+  parent_id = parent_id ? parent_id : null
   const sql = `INSERT INTO product_categories (name, parent_id, owner_id) VALUES (?,?,?)`
   db.query(sql, [name, parent_id, id], (err, results) => {
     if (err) return res.cc(err)
@@ -72,7 +73,8 @@ router.get('/product/categories', authMiddleWare, (req, res) => {
 // 更新產品分類
 router.put('/product/categories', authMiddleWare, (req, res) => {
   const { id } = req.auth
-  const { type_id, name, parent_id } = req.body
+  let { type_id, name, parent_id } = req.body
+  parent_id = parent_id ? parent_id : null
   const sql = `UPDATE product_categories SET name=?, parent_id=? WHERE type_id=? AND owner_id=?`
   db.query(sql, [name, parent_id, type_id, id], (err, results) => {
     if (err) return res.cc(err)
