@@ -1,5 +1,4 @@
 import './assets/scss/main.scss'
-import './assets/scss/confirm-messagebox.scss'
 
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
