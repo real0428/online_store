@@ -27,7 +27,7 @@ const props = defineProps({
   }
 })
 
-const imageUrl = ref('')
+const imageUrl = ref<string>('')
 
 watch(() => props.image, (image) => {
   console.log('image', image)
