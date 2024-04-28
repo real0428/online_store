@@ -49,7 +49,7 @@ const uploadModule = ref({
   name: 'imageUploader',
   module: ImageUploader,
   options: {
-    upload: file => {
+    upload: (file: any) => {
       return new Promise((resolve, reject) => {
         // 向後端請求上傳圖片
         uploadImage(file).then(res => {
