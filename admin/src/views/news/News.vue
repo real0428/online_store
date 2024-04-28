@@ -152,8 +152,9 @@ watch(() => props.id, (id) => {
   immediate: true,
 })
 
-const getFile = (f: RawFile) => {
+const getFile = (f: RawFile, _: any, imageUrl: string) => {
   form.image = f
+  form.image_url = imageUrl
 }
 
 // 保存

@@ -136,7 +136,7 @@ const rules = reactive<FormRules>({
     { required: true, message: '分類為必填', trigger: 'blur' }
   ],
   image_url: [
-    { required: true, message: '未上傳圖片', trigger: 'blur' }
+    { required: true, message: '未上傳圖片', trigger: 'change' }
   ],
   name: [
     { required: true, message: '名稱為必填', trigger: 'blur' }
@@ -157,7 +157,7 @@ const rules = reactive<FormRules>({
   ]
 })
 
-const { type_id, parents } = toRefs(form)
+const { type_id, parents, body } = toRefs(form)
 
 // 取得上級分類
 const fetchparents = async () => {
@@ -202,8 +202,9 @@ watch(() => props.id, (id) => {
   immediate: true,
 })
 
-const getFile = (f: RawFile) => {
+const getFile = (f: RawFile, _: any, imageUrl: string) => {
   form.image = f
+  form.image_url = imageUrl
 }
 
 // 保存
@@ -211,7 +212,6 @@ const save = (formEl: any) => {
   if (!formEl) return
   formEl.validate((valid: boolean) => {
     if (!valid) return false
-
     // 編輯
     if (props.id) {
       form.item_id = Number(props.id)

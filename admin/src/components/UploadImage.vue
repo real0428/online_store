@@ -39,7 +39,7 @@ watch(() => props.image, (image) => {
 const getFile = (file: any) => {
   const objectURL = URL.createObjectURL(file.raw)
   imageUrl.value = objectURL
-  emit('get-file', file.raw, props.index)
+  emit('get-file', file.raw, props.index, imageUrl.value)
 }
 
 const handleAvatarSuccess: UploadProps['onSuccess'] = (
