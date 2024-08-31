@@ -34,20 +34,41 @@ router.post('/business_user/login', (req, res) => {
   const sql = `SELECT * FROM business_users WHERE username=?`
   db.query(sql, username, (err, results) => {
     if (err) return res.cc(err)
-    if (results.length === 0) return res.status(422).cc('用戶不存在')
+    if (results.length === 0) return res.status(404).cc('用戶不存在')
     const compareResult = bycript.compareSync(password, results[0].password)
-    if (!compareResult) return res.status(401).cc('密碼錯誤')
+    if (!compareResult) return res.status(400).cc('密碼輸入錯誤')
     const user = {
       ...results[0],
       password: '',
       user_pic: ''
     }
-    const token = jwt.sign(user, process.env.JWTSECRETKEY, { expiresIn: '2h' })
-    res.send({
+    const token = jwt.sign(user, process.env.JWTSECRETKEY, { expiresIn: '8h' })
+    const refresh_token = jwt.sign(user, process.env.REFRESHTOKENKEY, { expiresIn: '30d' })
+    res.status(200).send({
       status: 0,
       message: '登入成功',
-      token: 'Bearer ' + token
+      token: 'Bearer ' + token,
+      refresh_token
     })
+  })
+})
+
+// 重新取得token
+router.post('/business_user/refresh_token', (req, res) => {
+  const { refresh_token } = req.body
+  if (!refresh_token) return res.status(401).cc('請先登入')
+  const payload = jwt.verify(refresh_token, process.env.REFRESHTOKENKEY)
+  console.log('xxxxx', payload)
+  const currentTime = Math.floor(Date.now() / 1000);
+  if (payload.exp < currentTime) return res.status(401).cc('請先登入')
+  const new_token = jwt.sign({ id: payload.id }, process.env.JWTSECRETKEY, { expiresIn: '8h' })
+  const new_refresh_token = jwt.sign({ id: payload.id }, process.env.REFRESHTOKENKEY, { expiresIn: '30d' })
+
+  res.send({
+    status: 0,
+    message: '請求成功',
+    token: 'Bearer ' + new_token,
+    refresh_token: new_refresh_token
   })
 })
 
@@ -57,7 +78,7 @@ router.get('/business_user/info', authMiddleWare, (req, res) => {
   const sql = `SELECT * FROM business_users WHERE id=?`
   db.query(sql, id, (err, results) => {
     if (err) return res.status(403).cc(err)
-    if (results.length !== 1) return res.status(401).cc('無訪問權限')
+    if (results.length !== 1) return res.status(422).cc('用戶不存在')
     res.send({
       message: '成功',
       user: {
