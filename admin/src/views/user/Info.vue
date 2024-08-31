@@ -92,7 +92,7 @@ const save = (formEl: any) => {
     const userInfo = useUserInfoStore()
     const res = await updateUserInfo(form)
     ElMessage.success(res.message)
-    userInfo.setUserInfo(res.data)
+    userInfo.SET_USER_INFO(res.data)
   })
 }
 

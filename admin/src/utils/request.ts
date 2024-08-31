@@ -12,20 +12,29 @@ request.interceptors.request.use(config => {
   return config
 })
 
+let refresh = false
 request.interceptors.response.use(response => {
   return response.data
-}, error => {
+}, async error => {
   const message = error.response.data.message;
-  ElMessage({
-    type: 'error',
-    message,
-  })
-  if (error.response.status === 401) {
-    const { clearToken } = useAuthStore()
-    setTimeout(() => {
-      clearToken()
-    }, 1000)
+  if (error.response.status === 401 && !refresh) {
+    refresh = true
+    const { REFRESH_TOKEN, CLEAR_TOKEN } = useAuthStore()
+    const { status } = await REFRESH_TOKEN()
+    if (status === 0) {
+      refresh = false
+      return request(error.config)
+    } else {
+      ElMessage({
+        type: 'error',
+        message,
+      })
+      setTimeout(() => {
+        CLEAR_TOKEN()
+      }, 1000)
+    }
   }
+  refresh = false
   return Promise.reject(error)
 })
 

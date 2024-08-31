@@ -1,10 +1,17 @@
 import request from '@/utils/request'
-export const getUsers = () => request.get('https://randomuser.me/api/');
 
-export const getAccessAuth = (form: any) => request({
+export const getTokens = (form: any) => request({
   method: 'post',
   url: '/business_user/login',
   data: form
+})
+
+export const refreshToken = (token: string) => request({
+  method: 'post',
+  url: '/business_user/refresh_token',
+  data: {
+    refresh_token: token
+  }
 })
 
 export const getUserInfo = () => request({
@@ -13,7 +20,6 @@ export const getUserInfo = () => request({
 
 export const updateUserInfo = (form: any) => {
   const formData = new FormData()
-  console.log(form.image);
   formData.append('username', form.username)
   if (form.image) {
     formData.append('image', form.image)
@@ -26,5 +32,4 @@ export const updateUserInfo = (form: any) => {
     url: '/business_user/info',
     data: formData
   })
-
 } 

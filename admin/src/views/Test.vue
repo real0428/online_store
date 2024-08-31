@@ -37,6 +37,7 @@ defineExpose({
 
 <style scoped lang="scss">
 .name {
-  color: red
+  color: red;
+  @apply text-lg;
 }
 </style>

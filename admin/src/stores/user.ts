@@ -1,23 +1,38 @@
 import { defineStore } from 'pinia'
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { refreshToken } from '@/api/user/user';
 
 
 export const useAuthStore = defineStore('user', () => {
 
-  const token = ref('hello')
-  const isLogin = ref(false)
+  const token = ref<string>('')
+  const refresh_token = ref<string>('')
+  const isLogin = ref<boolean>(false)
   const router = useRouter()
 
-  const setToken = (t: string) => {
+  const SET_TOKEN = (t: string, rt: string) => {
     token.value = t
+    refresh_token.value = rt
     isLogin.value = true
   }
 
-  const getToken = () => token.value
+  const REFRESH_TOKEN = async () => {
+    try {
+      const res = await refreshToken(refresh_token.value)
+      console.log(res)
+      token.value = res.token
+      refresh_token.value = res.refresh_token
+      return res
+    } catch (error) {
+      return error
+    }
 
-  const clearToken = () => {
+  }
+
+  const CLEAR_TOKEN = () => {
     token.value = ''
+    refresh_token.value = ''
     isLogin.value = false
     localStorage.removeItem('user')
     router.go(0)
@@ -25,10 +40,11 @@ export const useAuthStore = defineStore('user', () => {
 
   return {
     token,
+    refresh_token,
     isLogin,
-    setToken,
-    getToken,
-    clearToken
+    SET_TOKEN,
+    REFRESH_TOKEN,
+    CLEAR_TOKEN
   }
 }, {
   persist: true
@@ -41,7 +57,7 @@ export const useUserInfoStore = defineStore('userInfo', () => {
     user_pic: ''
   })
 
-  const setUserInfo = (info: any) => {
+  const SET_USER_INFO = (info: any) => {
     user.username = info.username
     user.nickname = info.nickname
     user.user_pic = info.user_pic
@@ -49,7 +65,7 @@ export const useUserInfoStore = defineStore('userInfo', () => {
 
   return {
     user,
-    setUserInfo
+    SET_USER_INFO
   }
 }, {
   persist: true
@@ -62,7 +78,7 @@ export const useUserInfoStore = defineStore('userInfo', () => {
 //     }
 //   },
 //   actions: {
-//     setToken(t: string) {
+//     SET_TOKEN(t: string) {
 //       this.token = t
 //     }
 //   },

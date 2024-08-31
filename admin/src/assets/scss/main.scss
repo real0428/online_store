@@ -3,7 +3,13 @@
 @tailwind utilities;
 @import "form";
 @import "messagebox";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
 
+html,
+body {
+  @apply text-base-500;
+  font-family: "Noto Sans TC", sans-serif;
+}
 
 h1 {
   @apply text-2xl font-bold

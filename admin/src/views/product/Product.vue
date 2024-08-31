@@ -2,11 +2,11 @@
   <div>
     <h1 class="mb-6">{{ id ? '編輯' : '建立' }}商品</h1>
     <div class="pl-10">
-      <el-form :model="form" ref="formRef" :rules="rules">
+      <el-form :model="form" ref="formRef" :rules="rules" :inline-message="true">
         <el-row class="mb-3">
           <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">所屬分類</span>
           <el-form-item prop="type_id">
-            <el-select placeholder="請選擇" size="large" style="width: 178px" v-model="type_id">
+            <el-select placeholder="請選擇" size="large" style="width: 178px" v-model="form.type_id">
               <el-option v-for="item in parents" :key="item.type_id" :label="item.name" :value="item.type_id" />
             </el-select>
           </el-form-item>
