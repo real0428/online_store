@@ -1,24 +1,29 @@
 <template>
-  <el-menu class="aside !border-r-0" :default-openeds="['1', '2', '3', '4', '5', '6']" @open="handleMenuIndex"
-    :unique-opened="false">
-    <el-menu-item index="1">
+  <el-menu :router="true" class="aside !border-r-0" :default-openeds="['1', '2', '3', '4', '5', '6']"
+    @open="handleMenuIndex" :default-active="route.path">
+    <el-sub-menu index="1">
       <template #title>
-        <router-link class="w-full flex items-center" to="/admin/user_info">
-          個人資料管理
-        </router-link>
+        <div>個人資料管理</div>
       </template>
-    </el-menu-item>
+      <el-menu-item-group>
+        <el-menu-item index="/admin/user_info" :class="{ 'active': route.name === 'user_info' }">
+          <router-link class="w-full flex items-center" to="/admin/user_info">
+            編輯個人資料
+          </router-link>
+        </el-menu-item>
+      </el-menu-item-group>
+    </el-sub-menu>
     <el-sub-menu index="2">
       <template #title>
         廣告管理
       </template>
       <el-menu-item-group>
-        <el-menu-item index="2-1" :class="{ 'active': route.name === 'ad_categories' }">
+        <el-menu-item index="/admin/ad/create" :class="{ 'active': route.name === 'ad_categories' }">
           <router-link class="w-full flex items-center" to="/admin/ad/create">
             建立廣告
           </router-link>
         </el-menu-item>
-        <el-menu-item index="2-2" :class="{ 'active': route.name === 'ad_list' }">
+        <el-menu-item index="/admin/ad/list" :class="{ 'active': route.name === 'ad_list' }">
           <router-link class="w-full flex items-center" to="/admin/ad/list">
             廣告列表
           </router-link>
@@ -30,22 +35,23 @@
         商品管理
       </template>
       <el-menu-item-group>
-        <el-menu-item index="3-1" :class="{ 'active': route.name === 'product_categories' }">
+        <el-menu-item index="/admin/product/categories" :class="{ 'active': route.name === 'product_categories' }">
           <router-link class="w-full flex items-center" to="/admin/product/categories">
             建立分類
           </router-link>
         </el-menu-item>
-        <el-menu-item index="3-2" :class="{ 'active': route.name === 'product_categories_list' }">
+        <el-menu-item index="/admin/product/categories_list"
+          :class="{ 'active': route.name === 'product_categories_list' }">
           <router-link class="w-full flex items-center" to="/admin/product/categories_list">
             分類列表
           </router-link>
         </el-menu-item>
-        <el-menu-item index="3-3" :class="{ 'active': route.name === 'product_list' }">
+        <el-menu-item index="/admin/product/list" :class="{ 'active': route.name === 'product_list' }">
           <router-link class="w-full flex items-center" to="/admin/product/list">
             產品列表
           </router-link>
         </el-menu-item>
-        <el-menu-item index="3-4" :class="{ 'active': route.name === 'product' }">
+        <el-menu-item index="/admin/product/product" :class="{ 'active': route.name === 'product' }">
           <router-link class="w-full flex items-center" to="/admin/product/product">
             建立產品
           </router-link>
@@ -57,22 +63,22 @@
         新聞管理
       </template>
       <el-menu-item-group>
-        <el-menu-item index="4-1" :class="{ 'active': route.name === 'news_categories' }">
+        <el-menu-item index="/admin/news/categories" :class="{ 'active': route.name === 'news_categories' }">
           <router-link class="w-full flex items-center" to="/admin/news/categories">
             建立分類
           </router-link>
         </el-menu-item>
-        <el-menu-item index="4-2" :class="{ 'active': route.name === 'news_categories_list' }">
+        <el-menu-item index="/admin/news/categories_list" :class="{ 'active': route.name === 'news_categories_list' }">
           <router-link class="w-full flex items-center" to="/admin/news/categories_list">
             分類列表
           </router-link>
         </el-menu-item>
-        <el-menu-item index="4-3" :class="{ 'active': route.name === 'news_list' }">
+        <el-menu-item index="/admin/news/list" :class="{ 'active': route.name === 'news_list' }">
           <router-link class="w-full flex items-center" to="/admin/news/list">
             文章列表
           </router-link>
         </el-menu-item>
-        <el-menu-item index="4-4" :class="{ 'active': route.name === 'news' }">
+        <el-menu-item index="/admin/news/news" :class="{ 'active': route.name === 'news' }">
           <router-link class="w-full flex items-center" to="/admin/news/news">
             建立文章
           </router-link>
@@ -85,7 +91,7 @@
         訂單管理
       </template>
       <el-menu-item-group>
-        <el-menu-item index="5-1" :class="{ 'active': route.name === 'order_list' }">
+        <el-menu-item index="/admin/order/list" :class="{ 'active': route.name === 'order_list' }">
           <router-link class="w-full flex items-center" to="/admin/order/list">
             訂單列表
           </router-link>
@@ -98,7 +104,7 @@
         會員管理
       </template>
       <el-menu-item-group>
-        <el-menu-item index="6-1" :class="{ 'active': route.name === 'member_list' }">
+        <el-menu-item index="/admin/member/list" :class="{ 'active': route.name === 'member_list' }">
           <router-link class="w-full flex items-center" to="/admin/member/list">
             會員列表
           </router-link>
@@ -110,12 +116,12 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-
+const route = useRoute()
 const emit = defineEmits(['get-menu-index'])
 const handleMenuIndex = (index: string): void => {
   emit('get-menu-index', index)
 }
-const route = useRoute()
+
 </script>
 
 <style lang="scss" scoped>
@@ -126,8 +132,20 @@ const route = useRoute()
 }
 
 :deep(.el-sub-menu) {
-  .el-sub-menu__title:hover {
-    background-color: transparent !important;
+
+  margin-bottom: 20px;
+
+  .el-sub-menu__title {
+    height: 45px;
+    margin: 0 20px 10px;
+    border-radius: 5px;
+  }
+
+  &.is-active {
+    .el-sub-menu__title {
+      background: theme('colors.primary.500');
+      color: white;
+    }
   }
 
   .el-menu--inline {
@@ -137,10 +155,10 @@ const route = useRoute()
   .el-menu--inline::before {
     content: '';
     width: 1px;
-    height: calc(100% - 20px);
+    height: calc(100% - 6px);
     background: theme('colors.base.300');
     position: absolute;
-    left: 25px;
+    left: 40px;
   }
 }
 
@@ -148,26 +166,23 @@ const route = useRoute()
   background-color: transparent;
 }
 
-.el-sub-menu__title:hover {
-  background-color: transparent;
-}
-
 .el-menu-item {
-  @apply mb-2 leading-normal
+  @apply leading-normal;
+  padding-left: 55px !important;
 }
 
 .el-menu-item a {
-  @apply p-3 rounded-lg relative
+  @apply p-3 rounded-lg relative top-[5px]
 }
 
 .el-menu-item a::before {
   content: '';
-  width:8px;
-  height:1px;
-  background:theme('colors.base.300');
-  position:absolute;
-  left:-14px;
-  transform:rotate(30deg)
+  width: 8px;
+  height: 1px;
+  background: theme('colors.base.300');
+  position: absolute;
+  left: -14px;
+  transform: rotate(30deg)
 }
 
 .el-menu-item a.router-link-active {

@@ -64,13 +64,17 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
 
 <style scoped>
 .avatar-uploader .avatar {
-  width: 178px;
-  height: 178px;
+  width: 60px;
+  height: 60px;
   display: block;
+  border-radius: 50%;
 }
-</style>
 
-<style>
+.avatar-uploader {
+  width: 60px;
+  height: 60px;
+}
+
 .avatar-uploader .el-upload {
   border: 1px dashed var(--el-border-color);
   border-radius: 6px;
@@ -78,6 +82,11 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
   position: relative;
   overflow: hidden;
   transition: var(--el-transition-duration-fast);
+  border-radius: 50%;
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: transparent !important;
 }
 
 .avatar-uploader .el-upload:hover {
@@ -87,8 +96,8 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
 .el-icon.avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 178px;
-  height: 178px;
+  width: 60px;
+  height: 60px;
   text-align: center;
 }
 </style>
