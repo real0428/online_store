@@ -1,45 +1,44 @@
 <template>
   <div>
-    <h1 class="mb-6">編輯我的資料</h1>
-    <div class="pl-10">
-      <el-form :model="form" :rules="rules" ref="formRef" status-icon>
-        <el-row class="flex mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">我的頭像</span>
-          <UploadImage :image="form.user_pic" @get-file="getFile" />
-        </el-row>
-        <el-row class="flex mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">我的帳號</span>
-          <el-form-item prop="username">
-            <el-input maxlength="20" show-word-limit style="width: 200px" size="large" v-model="form.username"
-              placeholder="帳號" />
-          </el-form-item>
-        </el-row>
-        <el-row class="flex mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">我的暱稱</span>
-          <el-form-item prop="nickname">
-            <el-input maxlength="20" show-word-limit style="width: 200px" size="large" v-model="form.nickname"
-              placeholder="暱稱" />
-          </el-form-item>
-        </el-row>
-        <el-row class="flex mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">電子信箱</span>
-          <el-form-item prop="email">
-            <el-input style="width: 400px" size="large" v-model="form.email" placeholder="信箱" />
-          </el-form-item>
-        </el-row>
-        <el-button type="primary" @click="save(formRef)">保存</el-button>
-      </el-form>
-    </div>
+    <Title>編輯個人資料</Title>
+    <el-form :model="form" :rules="rules" ref="formRef" status-icon>
+      <div class="flex mb-10 bg-white p-8 rounded items-center">
+        <UploadImage :image="form.user_pic" @get-file="getFile" />
+        <div class="ml-5 w-35 text-gray-600 inline-flex items-center font-bold">我的頭像</div>
+        <div class="ml-auto text-primary-500 cursor-pointer text-sm">變更相片</div>
+      </div>
+      <el-row>
+        <div>我的帳號</div>
+        <el-form-item prop="username">
+          <el-input maxlength="20" show-word-limit size="large" v-model="form.username" placeholder="帳號" />
+        </el-form-item>
+      </el-row>
+      <el-row>
+        <div>我的暱稱</div>
+        <el-form-item prop="nickname">
+          <el-input maxlength="20" show-word-limit size="large" v-model="form.nickname" placeholder="暱稱" />
+        </el-form-item>
+      </el-row>
+      <el-row>
+        <div>電子信箱</div>
+        <el-form-item prop="email">
+          <el-input size="large" v-model="form.email" placeholder="信箱" />
+        </el-form-item>
+      </el-row>
+      <Button class="mt-10 ml-auto" @click="save(formRef)">保存</Button>
+    </el-form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import UploadImage from '@/components/UploadImage.vue'
+import { ref, reactive, onMounted, defineAsyncComponent } from 'vue'
 import { getUserInfo, updateUserInfo } from '@/api/user/user'
 import { useUserInfoStore } from '@/stores/user'
 import { ElMessage } from "element-plus"
 import type { FormInstance, FormRules } from 'element-plus'
+const UploadImage = defineAsyncComponent(() => import('@/components/UploadImage.vue'))
+const Title = defineAsyncComponent(() => import('@/components/Title.vue'))
+const Button = defineAsyncComponent(() => import('@/components/Button.vue'))
 
 interface RawFile {
   uid: String,
@@ -110,6 +109,17 @@ onMounted(async () => {
 
 </script>
 
-<style lang="" scoped>
+<style lang="scss" scoped>
+.el-form {
+  max-width: 600px;
+  width: 100%;
+}
 
+.el-row {
+  @apply block mb-10
+}
+
+.el-row>div {
+  @apply mb-4 text-gray-600 items-center font-bold;
+}
 </style>

@@ -29,7 +29,7 @@
           </div>
         </div>
       </el-header>
-      <el-main class="rounded bg-white !p-6">
+      <el-main class="rounded!p-6">
         <el-scrollbar>
           <router-view></router-view>
         </el-scrollbar>
