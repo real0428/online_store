@@ -34,9 +34,9 @@ router.post('/business_user/login', (req, res) => {
   const sql = `SELECT * FROM business_users WHERE username=?`
   db.query(sql, username, (err, results) => {
     if (err) return res.cc(err)
-    if (results.length === 0) return res.status(404).cc('用戶不存在')
+    if (results.length === 0) return res.status(404).cc('帳號或密碼錯誤')
     const compareResult = bycript.compareSync(password, results[0].password)
-    if (!compareResult) return res.status(400).cc('密碼輸入錯誤')
+    if (!compareResult) return res.status(404).cc('帳號或密碼錯誤')
     const user = {
       ...results[0],
       password: '',
