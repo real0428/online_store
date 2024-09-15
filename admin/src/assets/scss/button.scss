@@ -1,0 +1,31 @@
+.el-button {
+  --el-button-hover-text-color: none !important;
+  --el-button-hover-bg-color: none !important;
+  --el-button-hover-border-color: none !important;
+  --el-button-active-border-color: var(--el-color-primary);
+  --el-button-active-bg-color: var(--el-button-hover-bg-color);
+  --el-button-outline-color: var(--el-color-primary-light-5);
+  --el-button-hover-link-text-color: var(--el-color-info);
+  --el-button-active-color: var(--el-text-color-primary);
+}
+
+.el-button--primary {
+  --el-button-text-color: white !important;
+  --el-button-bg-color: theme('colors.primary.500') !important;
+  --el-button-border-color: none !important;
+  --el-button-outline-color: none !important;
+  --el-button-active-color: none !important;
+  --el-button-hover-text-color: white !important;
+  --el-button-hover-link-text-color: none !important;
+  --el-button-hover-bg-color: theme('colors.primary.500') !important;
+  --el-button-hover-border-color: none !important;
+  --el-button-active-bg-color: theme('colors.primary.500') !important;
+  --el-button-active-border-color: none !important;
+  --el-button-disabled-text-color: none !important;
+  --el-button-disabled-bg-color: none !important;
+  --el-button-disabled-border-color: none !important;
+
+  &:hover {
+    opacity: 0.9
+  }
+}

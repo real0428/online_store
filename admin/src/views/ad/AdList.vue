@@ -16,7 +16,8 @@
 import { onMounted, ref, reactive } from 'vue';
 import { useRouter } from 'vue-router'
 import { getAdList, deleteAd } from "@/api/ad/ad"
-import { ElMessage, ElMessageBox } from "element-plus"
+import { useMessage } from '@/composables/message';
+import { ElMessageBox } from "element-plus"
 
 const router = useRouter()
 const ads = ref()
@@ -50,7 +51,7 @@ const handleDelete = async (ad: any) => {
       }
     },
   }).then((action) => {
-    ElMessage({
+    useMessage({
       type: 'success',
       message: '刪除成功',
     })

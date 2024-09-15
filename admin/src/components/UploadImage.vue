@@ -1,8 +1,8 @@
 <template>
-  <el-upload class="avatar-uploader" :auto-upload="false" :on-change="getFile" action="#" :show-file-list="false"
+  <el-upload :auto-upload="false" :on-change="getFile" action="#" :show-file-list="false"
     :on-success="handleAvatarSuccess">
-    <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-    <el-icon v-else class="avatar-uploader-icon">
+    <img v-if="imageUrl" :src="imageUrl" />
+    <el-icon v-else class="uploader-icon">
       <Plus />
     </el-icon>
   </el-upload>
@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { ElMessage } from 'element-plus'
+import { useMessage } from '@/composables/message'
 import { Plus } from '@element-plus/icons-vue'
 import type { UploadProps } from 'element-plus'
 
@@ -24,6 +24,9 @@ const props = defineProps({
   image: {
     type: String,
     default: ''
+  },
+  size: {
+    type: Number
   }
 })
 
@@ -52,52 +55,39 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
 /* const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   console.log(123);
   if (rawFile.type !== 'image/jpeg') {
-    ElMessage.error('檔案須為jpg格式!')
+    useMessage.error('檔案須為jpg格式!')
     return false
   } else if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error('檔案不能超過2MB!')
+    useMessage.error('檔案不能超過2MB!')
     return false
   }
   return true
 } */
 </script>
 
-<style scoped>
-.avatar-uploader .avatar {
-  width: 60px;
-  height: 60px;
-  display: block;
-  border-radius: 50%;
-}
-
-.avatar-uploader {
-  width: 60px;
-  height: 60px;
-}
-
-.avatar-uploader .el-upload {
+<style lang="scss">
+.el-upload {
+  width: 100%;
+  height: 100%;
   border: 1px dashed var(--el-border-color);
   border-radius: 6px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
   transition: var(--el-transition-duration-fast);
-  border-radius: 50%;
 }
 
-.avatar-uploader .el-upload:hover {
+.el-upload:hover {
   border-color: transparent !important;
 }
 
-.avatar-uploader .el-upload:hover {
+.el-upload:hover {
   border-color: var(--el-color-primary);
 }
 
-.el-icon.avatar-uploader-icon {
-  font-size: 28px;
+.el-icon.uploader-icon {
+  font-size: 20px;
   color: #8c939d;
-  width: 60px;
-  height: 60px;
   text-align: center;
 }
 </style>

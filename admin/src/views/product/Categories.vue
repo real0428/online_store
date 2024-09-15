@@ -1,22 +1,24 @@
 <template>
   <div>
-    <h1 class="mb-6">建立分類</h1>
-    <div class="pl-10">
+    <Title>{{ id ? '編輯' : '新增' }}分類</Title>
+    <div>
       <el-form :model="form" :rules="rules" ref="formRef" status-icon>
-        <el-row class="flex mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">上級分類</span>
-          <el-select placeholder="請選擇" size="large" style="width: 240px" v-model="parentId">
+        <el-row>
+          <div>分類名稱</div>
+          <el-form-item prop="input">
+            <el-input size="large" v-model="input" placeholder="輸入名稱" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <div>上級分類</div>
+          <el-select placeholder="請選擇" size="large" v-model="parentId">
             <el-option label="請選擇" value="" />
             <el-option v-for="item in parents" :key="item.type_id" :label="item.name" :value="item.type_id" />
           </el-select>
         </el-row>
-        <el-row class="flex mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">分類名稱</span>
-          <el-form-item prop="input">
-            <el-input style="width: 240px" size="large" v-model="input" placeholder="輸入名稱" />
-          </el-form-item>
-        </el-row>
-        <el-button type="primary" @click="save(formRef)">保存</el-button>
+        <div class="flex justify-end">
+          <SaveButton @click="save(formRef)">保存</SaveButton>
+        </div>
       </el-form>
     </div>
   </div>
@@ -25,7 +27,7 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted, watch, toRefs } from 'vue'
 import { getProductCategories, createProductCategory, updateProductCategory } from '@/api/product/category'
-import { ElMessage } from "element-plus"
+import { useMessage } from '@/composables/message'
 import { useRouter } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { Category } from '@/types/category'
@@ -47,7 +49,6 @@ interface FormData {
 const router = useRouter()
 
 const formRef = ref<FormInstance>()
-
 const form = reactive<FormData>({
   parents: [],
   input: '',
@@ -70,23 +71,22 @@ const save = (formEl: any) => {
     if (!valid) return false
     if (props.id) {
       updateProductCategory(input.value, parentId.value, typeId.value).then(response => {
-        ElMessage({
+        useMessage({
           type: "success",
           message: response.message
         })
         router.push({
-          path: '/product/categories_list'
+          path: '/admin/product/categories_list'
         })
       })
     } else {
       createProductCategory(input.value, parentId.value).then(response => {
-        console.log(response);
-        ElMessage({
+        useMessage({
           type: "success",
           message: response.message
         })
         router.push({
-          path: '/product/categories_list'
+          path: '/admin/product/categories_list'
         })
       })
     }
@@ -112,8 +112,6 @@ watch(() => props.id, (id) => {
   }
 })
 
-onMounted(() => {
-  fetchParents()
-})
+onMounted(() => fetchParents())
 
 </script>

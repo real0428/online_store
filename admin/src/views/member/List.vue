@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <Title>
     會員列表
-  </div>
+  </Title>
 </template>

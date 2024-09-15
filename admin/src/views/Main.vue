@@ -5,12 +5,12 @@
         <div class="text-xl font-bold text-center mb-4">
           <!-- <font-awesome-icon class="mr-1 text-gray-900" :icon="['fas', 'gear']" />後台管理系統 -->
         </div>
-        <Menu :menuIndex="menuIndex" @get-menu-index="updateTitle()" />
+        <Menu :menuIndex="menuIndex" @get-menu-index="updateTitle(menuIndex)" />
       </el-scrollbar>
     </el-aside>
 
-    <el-container class="px-[60px] pb-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.01)]">
-      <el-header class="!px-0 flex items-center my-3">
+    <el-container class="pb-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.01)]">
+      <el-header class="!px-[60px] flex items-center my-3">
         <!-- <div class="text-3xl font-bold text-gray-700">{{ title }}</div> -->
         <div class="toolbar ml-auto">
           <div class="user-dropdown-button flex items-center cursor-pointer relative"
@@ -22,14 +22,15 @@
             </div>
             <transition name="user">
               <div v-show="userDropdownState"
-                class="w-[120px] text-center shadow-sm inline-block px-5 py-1 rounded bg-white text-gray-800 absolute right-0 top-14"
+                class="w-[120px] text-center shadow-sm inline-block px-5 py-3 rounded bg-white text-gray-800 absolute right-0 top-[60px]"
                 @click="logout">登出
               </div>
             </transition>
           </div>
         </div>
       </el-header>
-      <el-main class="rounded!p-6">
+      <div class="bg-primary-100/50 py-3 px-[60px] mb-10">123</div>
+      <el-main class="!px-[60px]">
         <el-scrollbar>
           <router-view></router-view>
         </el-scrollbar>
@@ -83,6 +84,7 @@ watch(() => route.name, (name) => {
 
 const userInfo = useUserInfoStore()
 const { user } = storeToRefs(userInfo)
+console.log(user.value)
 
 const userDropdownState = ref(false)
 const closeDropdown = (event: MouseEvent) => {

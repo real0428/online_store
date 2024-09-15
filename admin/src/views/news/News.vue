@@ -1,45 +1,43 @@
 <template>
   <div>
-    <h1 class="mb-6">{{ id ? '編輯' : '建立' }}文章</h1>
-    <div class="pl-10">
-      <el-form :model="form" ref="formRef" :rules="rules">
-        <el-row class="flex mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">所屬分類</span>
-          <el-form-item prop="type_id">
-            <el-select placeholder="請選擇" size="large" style="width: 178px" v-model="type_id">
-              <el-option v-for="item in parents" :key="item.type_id" :label="item.name" :value="item.type_id" />
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row class="flex mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">文章首圖</span>
-          <el-form-item prop="image_url">
-            <UploadImage :image="form.img_url" @get-file="getFile" />
-          </el-form-item>
-        </el-row>
-        <el-row class="flex mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">文章標題</span>
-          <el-form-item prop="title">
-            <el-input maxlength="40" show-word-limit style="width: 500px" size="large" v-model="form.title"
-              placeholder="輸入名稱" />
-          </el-form-item>
-        </el-row>
-        <el-row class="flex mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">文章簡述</span>
-          <el-form-item prop="description">
-            <el-input maxlength="50" show-word-limit style="width: 500px" size="large" v-model="form.description"
-              placeholder="輸入簡述" />
-          </el-form-item>
-        </el-row>
-        <el-row class="flex mb-3 items-start">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">文章內容</span>
-          <div class="max-w-[600px]">
-            <PostEditor ref="editor" v-model:content="form.body" />
-          </div>
-        </el-row>
-        <el-button type="primary" @click="save(formRef)">保存</el-button>
-      </el-form>
-    </div>
+    <Title>{{ id ? '編輯' : '新增' }}文章</Title>
+    <el-form :model="form" ref="formRef" :rules="rules">
+      <el-row>
+        <div>所屬分類</div>
+        <el-form-item prop="type_id">
+          <el-select placeholder="請選擇" size="large" v-model="type_id">
+            <el-option v-for="item in parents" :key="item.type_id" :label="item.name" :value="item.type_id" />
+          </el-select>
+        </el-form-item>
+      </el-row>
+      <el-row>
+        <div>文章首圖</div>
+        <el-form-item prop="image_url">
+          <UploadImage class="w-[200px] h-[200px] bg-white" :image="form.img_url" @get-file="getFile" />
+        </el-form-item>
+      </el-row>
+      <el-row>
+        <div>文章標題</div>
+        <el-form-item prop="title">
+          <el-input maxlength="40" show-word-limit size="large" v-model="form.title" placeholder="輸入名稱" />
+        </el-form-item>
+      </el-row>
+      <el-row>
+        <div>文章簡述</div>
+        <el-form-item prop="description">
+          <el-input maxlength="50" show-word-limit size="large" v-model="form.description" placeholder="輸入簡述" />
+        </el-form-item>
+      </el-row>
+      <el-row>
+        <div>文章內容</div>
+        <div class="rounded overflow-hidden">
+          <PostEditor ref="editor" v-model:content="form.body" />
+        </div>
+      </el-row>
+      <div class="flex justify-end">
+        <SaveButton @click="save(formRef)">保存</SaveButton>
+      </div>
+    </el-form>
   </div>
 </template>
 
@@ -47,7 +45,7 @@
 import { ref, reactive, watch, withDefaults, toRefs } from 'vue'
 import { getNewsCategories } from '@/api/news/category'
 import { createNews, getNewsInfo, updateNews } from '@/api/news/news'
-import { ElMessage } from "element-plus"
+import { useMessage } from '@/composables/message'
 import { useRouter } from 'vue-router'
 import UploadImage from '@/components/UploadImage.vue'
 import PostEditor from '@/components/PostEditor.vue'
@@ -167,7 +165,7 @@ const save = (formEl: any) => {
       form.item_id = Number(props.id)
       form.is_active = 0
       updateNews(form).then(res => {
-        ElMessage({
+        useMessage({
           type: "success",
           message: res.message
         })
@@ -178,7 +176,7 @@ const save = (formEl: any) => {
       // 新建
     } else {
       createNews(form).then(res => {
-        ElMessage({
+        useMessage({
           type: "success",
           message: res.message
         })

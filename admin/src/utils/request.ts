@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
+import { useMessage } from '@/composables/message'
 import { useAuthStore } from '@/stores/user'
 
 let request = axios.create({
@@ -25,7 +25,7 @@ request.interceptors.response.use(response => {
       refresh = false
       return request(error.config)
     } else {
-      ElMessage({
+      useMessage({
         type: 'error',
         message,
       })

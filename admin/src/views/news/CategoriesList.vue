@@ -1,13 +1,15 @@
 <template>
-  <h1 class="mb-6">分類列表</h1>
+  <Title>新聞分類</Title>
   <el-table :data="categories" style="width: 100%">
     <el-table-column prop="type_id" label="ID" width="100" />
     <el-table-column prop="parent_name" label="上級分類" width="180" />
     <el-table-column prop="name" label="分類名稱" />
     <el-table-column>
       <template #default="scope">
-        <el-button type="primary" @click="handleEdit(scope.row.type_id)">編緝</el-button>
-        <el-button type="danger" @click="handleDelete(scope.row)">刪除</el-button>
+        <FunctionalButton class="bg-primary-100 text-primary-500 mx-2 font-bold" @click="handleDelete(scope.row)">刪除
+        </FunctionalButton>
+        <FunctionalButton class="bg-primary-500 text-white mx-2 " @click="handleEdit(scope.row.type_id)">編緝
+        </FunctionalButton>
       </template>
     </el-table-column>
   </el-table>
@@ -17,7 +19,8 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router'
 import { getNewsCategories, deleteNewsCategory } from "@/api/news/category"
-import { ElMessage, ElMessageBox } from "element-plus"
+import { useMessage } from '@/composables/message';
+import { ElMessageBox } from "element-plus"
 
 const router = useRouter()
 const categories = ref()
@@ -51,7 +54,7 @@ const handleDelete = async (news: any) => {
       }
     },
   }).then((action) => {
-    ElMessage({
+    useMessage({
       type: 'success',
       message: '刪除成功',
     })

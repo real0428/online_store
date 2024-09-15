@@ -13,7 +13,7 @@
         </el-menu-item>
       </el-menu-item-group>
     </el-sub-menu>
-    <el-sub-menu index="2">
+    <!-- <el-sub-menu index="2">
       <template #title>
         廣告管理
       </template>
@@ -29,7 +29,7 @@
           </router-link>
         </el-menu-item>
       </el-menu-item-group>
-    </el-sub-menu>
+    </el-sub-menu> -->
     <el-sub-menu index="3">
       <template #title>
         商品管理
@@ -37,23 +37,23 @@
       <el-menu-item-group>
         <el-menu-item index="/admin/product/categories" :class="{ 'active': route.name === 'product_categories' }">
           <router-link class="w-full flex items-center" to="/admin/product/categories">
-            建立分類
+            新增分類
           </router-link>
         </el-menu-item>
         <el-menu-item index="/admin/product/categories_list"
           :class="{ 'active': route.name === 'product_categories_list' }">
           <router-link class="w-full flex items-center" to="/admin/product/categories_list">
-            分類列表
+            商品分類
           </router-link>
         </el-menu-item>
         <el-menu-item index="/admin/product/list" :class="{ 'active': route.name === 'product_list' }">
           <router-link class="w-full flex items-center" to="/admin/product/list">
-            產品列表
+            產品總覽
           </router-link>
         </el-menu-item>
         <el-menu-item index="/admin/product/product" :class="{ 'active': route.name === 'product' }">
           <router-link class="w-full flex items-center" to="/admin/product/product">
-            建立產品
+            新增產品
           </router-link>
         </el-menu-item>
       </el-menu-item-group>
@@ -65,22 +65,22 @@
       <el-menu-item-group>
         <el-menu-item index="/admin/news/categories" :class="{ 'active': route.name === 'news_categories' }">
           <router-link class="w-full flex items-center" to="/admin/news/categories">
-            建立分類
+            新增分類
           </router-link>
         </el-menu-item>
         <el-menu-item index="/admin/news/categories_list" :class="{ 'active': route.name === 'news_categories_list' }">
           <router-link class="w-full flex items-center" to="/admin/news/categories_list">
-            分類列表
+            新聞分類
           </router-link>
         </el-menu-item>
         <el-menu-item index="/admin/news/list" :class="{ 'active': route.name === 'news_list' }">
           <router-link class="w-full flex items-center" to="/admin/news/list">
-            文章列表
+            新聞總覽
           </router-link>
         </el-menu-item>
         <el-menu-item index="/admin/news/news" :class="{ 'active': route.name === 'news' }">
           <router-link class="w-full flex items-center" to="/admin/news/news">
-            建立文章
+            新增新聞
           </router-link>
         </el-menu-item>
       </el-menu-item-group>
@@ -132,9 +132,7 @@ const handleMenuIndex = (index: string): void => {
 }
 
 :deep(.el-sub-menu) {
-
   margin-bottom: 20px;
-
   .el-sub-menu__title {
     height: 45px;
     margin: 0 20px 10px;
@@ -147,6 +145,13 @@ const handleMenuIndex = (index: string): void => {
       color: white;
     }
   }
+
+  &:not(.is-active) {
+    .el-sub-menu__title:hover {
+      background: transparent
+    }
+  }
+  
 
   .el-menu--inline {
     position: relative;
@@ -162,6 +167,8 @@ const handleMenuIndex = (index: string): void => {
   }
 }
 
+
+
 .el-menu-item:hover {
   background-color: transparent;
 }
@@ -172,7 +179,7 @@ const handleMenuIndex = (index: string): void => {
 }
 
 .el-menu-item a {
-  @apply p-3 rounded-lg relative top-[5px]
+  @apply p-5 rounded-lg relative top-[5px]
 }
 
 .el-menu-item a::before {

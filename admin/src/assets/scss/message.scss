@@ -1,0 +1,25 @@
+.el-message.message-class {
+  width: 200px;
+  padding: theme('spacing.6');
+}
+
+.el-message.message-class .el-message__content {
+  font-size: theme('fontSize.base');
+  padding: 0 !important;
+}
+
+.el-message.message-class .el-icon {
+  display: none;
+}
+
+.el-message--success {
+  --el-message-bg-color: white !important;
+  --el-message-border-color: theme('colors.primary.500') !important;
+  --el-message-text-color: theme('colors.primary.500') !important;
+}
+
+.el-message--warning {
+  --el-message-bg-color: white !important;
+  --el-message-border-color: theme('colors.secondary.500') !important;
+  --el-message-text-color: theme('colors.secondary.500') !important;
+}

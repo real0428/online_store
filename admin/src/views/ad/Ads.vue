@@ -1,35 +1,25 @@
 <template>
-  <h1 class="mb-6">{{ id ? '編輯' : '建立' }}廣告</h1>
-  <div class="pl-10">
+  <Title>{{ id ? '編輯' : '建立' }}廣告</Title>
+  <div>
     <el-row class="flex mb-3">
-      <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">名稱</span>
       <el-input v-model="type_name" maxlength="50" show-word-limit style="width: 500px" size="large"
         placeholder="輸入名稱" />
-    </el-row>
-    <el-row class="flex mb-3">
-      <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">廣告</span>
-      <el-button size="large" class="mb-3" @click="addAd">
+      <el-button size="large" class="ml-3" @click="addAd">
         <font-awesome-icon :icon="['fas', 'plus']" class="mr-2" />新增廣告
       </el-button>
-      <div class="grid grid-cols-3 gap-8">
-        <div class="flex flex-wrap" v-for="(ad, index) in images" :key="index">
-          <UploadImage :image="ad.imgUrl" :index="index" @get-file="getFile" />
-          <el-row class="mb-3 mt-3 items-center w-full">
-            <el-input class="mr-1 input-with-select" style="width: 500px" size="large" placeholder="http://"
-              v-model="ad.url">
-              <template #prepend width="300">
-                <span>超連結</span>
-              </template>
-            </el-input>
-          </el-row>
-          <el-row class="mb-3 items-center w-full">
-            <el-input class="mr-1 input-with-select" style="width: 500px" size="large" placeholder="描述"
-              v-model="ad.description">
-              <template #prepend width="300">
-                <span>圖片描述</span>
-              </template>
-            </el-input>
-          </el-row>
+    </el-row>
+    <el-row class="flex mb-3">
+      <div class="grid grid-cols-4 gap-8">
+        <div class="p-8 bg-white rounded" v-for="(ad, index) in images" :key="index">
+          <UploadImage class="h-[160px]" :image="ad.imgUrl" :index="index" @get-file="getFile" />
+          <div class="mb-3 mt-3">
+            <span>連結</span>
+            <div>{{ ad.url }}</div>
+          </div>
+          <div>
+            <span>描述</span>
+            <div>{{ ad.description }}</div>
+          </div>
           <el-button class="ml-auto" type="danger" @click="deleteAd(index)">刪除</el-button>
         </div>
       </div>
@@ -45,7 +35,7 @@ import type { AdData } from "@/types/ad"
 import UploadImage from '@/components/UploadImage.vue'
 import { uploadImage } from '@/api/upload/image'
 import { uploadAd, getAd, updateAd } from '@/api/ad/ad'
-import { ElMessage } from 'element-plus'
+import { useMessage } from '@/composables/message'
 
 interface RawFile {
   uid: String,
@@ -110,7 +100,7 @@ const save = async () => {
   } else {
     res = await updateAd(ad)
   }
-  ElMessage.success(res.message)
+  useMessage.success(res.message)
   router.push({
     name: 'ad_list'
   })
@@ -118,15 +108,7 @@ const save = async () => {
 </script>
 
 <style lang="scss" scoped>
-:deep() {
-
-  .avatar-uploader,
-  .el-upload {
-    width: 100%;
-  }
-
-  .el-input-group__prepend {
-    width: 85px;
-  }
+.el-row {
+  @apply block mb-10
 }
 </style>

@@ -74,4 +74,17 @@ defineExpose({
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.ql-container.ql-snow {
+  background: white !important;
+  border: 0;
+}
+
+.ql-toolbar.ql-snow {
+  background: white !important;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 1px solid theme('colors.primary.100')
+}
+</style>

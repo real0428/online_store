@@ -2,8 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 @import "form";
-@import "messagebox";
+@import "message";
+@import "messageBox";
+@import "table";
+@import "switch";
+@import "button";
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
+
+
+:root {
+  --primary-color: black !important;
+}
+
 
 html,
 body {

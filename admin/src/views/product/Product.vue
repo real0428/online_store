@@ -1,78 +1,76 @@
 <template>
   <div>
-    <h1 class="mb-6">{{ id ? '編輯' : '建立' }}商品</h1>
-    <div class="pl-10">
-      <el-form :model="form" ref="formRef" :rules="rules" :inline-message="true">
-        <el-row class="mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">所屬分類</span>
-          <el-form-item prop="type_id">
-            <el-select placeholder="請選擇" size="large" style="width: 178px" v-model="form.type_id">
-              <el-option v-for="item in parents" :key="item.type_id" :label="item.name" :value="item.type_id" />
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row class="mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品封面</span>
-          <el-form-item prop="image_url">
-            <UploadImage :image="form.image_url" @get-file="getFile" />
-          </el-form-item>
-        </el-row>
-        <el-row class="mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品名稱</span>
-          <el-form-item prop="name">
-            <el-input maxlength="30" show-word-limit style="width: 500px" size="large" v-model="form.name"
-              placeholder="輸入名稱" />
-          </el-form-item>
-        </el-row>
-        <el-row class="mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品簡述</span>
-          <el-form-item prop="description">
-            <el-input maxlength="50" show-word-limit style="width: 500px" size="large" v-model="form.description"
-              placeholder="輸入簡述" />
-          </el-form-item>
-        </el-row>
-        <el-row class="mb-3 items-center">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品原價</span>
-          <el-form-item prop="ori_price">
-            <el-input class="mr-1 input-with-select" style="width: 178px" size="large" v-model.number="form.ori_price"
-              placeholder="輸入價格">
-              <template #prepend>
-                <span>NT$</span>
-              </template>
-            </el-input>
-          </el-form-item>
-        </el-row>
-        <el-row class="mb-3 items-center">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品售價</span>
-          <el-form-item prop="sale_price">
-            <el-input class="mr-1 input-with-select" style="width: 178px" size="large" v-model.number="form.sale_price"
-              placeholder="輸入價格">
-              <template #prepend>
-                <span>NT$</span>
-              </template>
-            </el-input>
-          </el-form-item>
-        </el-row>
-        <el-row class="mb-3 items-center">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品庫存</span>
-          <el-form-item prop="stock" :status-icon="false">
-            <el-input-number :min="0" :max="99" class="mr-1 input-with-select" style="width: 130px" size="large"
-              type="number" v-model.number="form.stock" placeholder="庫存">
-              <template #prepend>
-                <span>單位:個</span>
-              </template>
-            </el-input-number>
-          </el-form-item>
-        </el-row>
-        <el-row class="mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">商品介紹</span>
-          <div class="max-w-[600px]">
-            <PostEditor ref="editor" v-model:content="form.body" />
-          </div>
-        </el-row>
-        <el-button type="primary" @click="save(formRef)">保存</el-button>
-      </el-form>
-    </div>
+    <Title>{{ id ? '編輯' : '建立' }}商品</Title>
+    <el-form :model="form" ref="formRef" :rules="rules">
+      <el-row class="mb-3">
+        <div>所屬分類</div>
+        <el-form-item class="block" prop="type_id">
+          <el-select placeholder="請選擇" size="large" v-model="form.type_id">
+            <el-option v-for="item in parents" :key="item.type_id" :label="item.name" :value="item.type_id" />
+          </el-select>
+        </el-form-item>
+      </el-row>
+      <el-row class="mb-3">
+        <div>商品封面</div>
+        <el-form-item prop="image_url">
+          <UploadImage class="w-[200px] h-[200px] bg-white" :image="form.image_url" @get-file="getFile" />
+        </el-form-item>
+      </el-row>
+      <el-row class="mb-3">
+        <div>商品名稱</div>
+        <el-form-item prop="name">
+          <el-input maxlength="30" show-word-limit size="large" v-model="form.name" placeholder="輸入名稱" />
+        </el-form-item>
+      </el-row>
+      <el-row class="mb-3">
+        <div>商品簡述</div>
+        <el-form-item prop="description">
+          <el-input maxlength="50" show-word-limit size="large" v-model="form.description" placeholder="輸入簡述" />
+        </el-form-item>
+      </el-row>
+      <el-row class="mb-3 items-center">
+        <div>商品原價</div>
+        <el-form-item prop="ori_price">
+          <el-input class="mr-1 input-with-select" style="width: 180px" size="large" v-model.number="form.ori_price"
+            placeholder="輸入價格">
+            <template #prepend>
+              <span>NT$</span>
+            </template>
+          </el-input>
+        </el-form-item>
+      </el-row>
+      <el-row class="mb-3 items-center">
+        <div>商品售價</div>
+        <el-form-item prop="sale_price">
+          <el-input class="mr-1 input-with-select" style="width: 180px" size="large" v-model.number="form.sale_price"
+            placeholder="輸入價格">
+            <template #prepend>
+              <span>NT$</span>
+            </template>
+          </el-input>
+        </el-form-item>
+      </el-row>
+      <el-row class="mb-3 items-center">
+        <div>商品庫存</div>
+        <el-form-item prop="stock" :status-icon="false">
+          <el-input-number :min="0" :max="99" class="mr-1 input-with-select" style="width: 130px" size="large"
+            type="number" v-model.number="form.stock" placeholder="庫存">
+            <template #prepend>
+              <span>單位:個</span>
+            </template>
+          </el-input-number>
+        </el-form-item>
+      </el-row>
+      <el-row class="mb-3">
+        <div>商品介紹</div>
+        <div class="rounded overflow-hidden">
+          <PostEditor ref="editor" v-model:content="form.body" />
+        </div>
+      </el-row>
+      <div class="flex justify-end">
+        <SaveButton @click="save()">保存</SaveButton>
+      </div>
+    </el-form>
   </div>
 </template>
 
@@ -80,7 +78,7 @@
 import { toRefs, ref, reactive, watch, onMounted } from 'vue'
 import { getProductCategories } from '@/api/product/category'
 import { createProduct, getProductInfo, updateProductInfo } from '@/api/product/product'
-import { ElMessage } from "element-plus"
+import { useMessage } from '@/composables/message'
 import { useRouter } from 'vue-router'
 import UploadImage from '@/components/UploadImage.vue'
 import PostEditor from '@/components/PostEditor.vue'
@@ -208,16 +206,16 @@ const getFile = (f: RawFile, _: any, imageUrl: string) => {
 }
 
 // 保存
-const save = (formEl: any) => {
-  if (!formEl) return
-  formEl.validate((valid: boolean) => {
+const save = () => {
+  if (!formRef.value) return
+  formRef.value.validate((valid: boolean) => {
     if (!valid) return false
     // 編輯
     if (props.id) {
       form.item_id = Number(props.id)
       form.is_active = 0
       updateProductInfo(form).then((res: { message: any }) => {
-        ElMessage({
+        useMessage({
           type: "success",
           message: res.message
         })
@@ -228,7 +226,7 @@ const save = (formEl: any) => {
       // 新建
     } else {
       createProduct(form).then((res: { message: any }) => {
-        ElMessage({
+        useMessage({
           type: "success",
           message: res.message
         })

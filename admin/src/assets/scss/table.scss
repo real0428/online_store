@@ -1,0 +1,11 @@
+.el-table th.el-table__cell {
+  background: theme('colors.primary.100') !important
+}
+
+.el-table .cell {
+  display: flex;
+}
+
+.el-table th .cell {
+  color: theme('colors.primary.500')
+}

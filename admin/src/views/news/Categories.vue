@@ -1,30 +1,30 @@
 <template>
   <div>
-    <h1 class="mb-6">{{ id ? '編輯' : '建立' }}分類</h1>
-    <div class="pl-10">
-      <el-form ref="formRef" :model="form" :rules="rules" status-icon>
-        <el-row class="flex mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">上級分類</span>
-          <el-select placeholder="請選擇" size="large" style="width: 240px" v-model="parentId">
-            <el-option v-for="item in parents" :key="item.type_id" :label="item.name" :value="item.type_id" />
-          </el-select>
-        </el-row>
-        <el-row class="flex mb-3">
-          <span class="mr-3 w-35 text-gray-600 inline-flex items-center font-bold">分類名稱</span>
-          <el-form-item prop="input">
-            <el-input style="width: 240px" size="large" v-model="input" placeholder="輸入名稱" />
-          </el-form-item>
-        </el-row>
-        <el-button type="primary" @click="save(formRef)">保存</el-button>
-      </el-form>
-    </div>
+    <Title>{{ id ? '編輯' : '新增' }}分類</Title>
+    <el-form ref="formRef" :model="form" :rules="rules" status-icon>
+      <el-row class="flex">
+        <div>分類名稱</div>
+        <el-form-item prop="input">
+          <el-input size="large" v-model="input" placeholder="輸入名稱" />
+        </el-form-item>
+      </el-row>
+      <el-row class="flex">
+        <div>上級分類</div>
+        <el-select placeholder="請選擇" size="large" v-model="parentId">
+          <el-option v-for="item in parents" :key="item.type_id" :label="item.name" :value="item.type_id" />
+        </el-select>
+      </el-row>
+      <div class="flex justify-end">
+        <SaveButton @click="save(formRef)">保存</SaveButton>
+      </div>
+    </el-form>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted, watch, toRefs } from 'vue'
 import { getNewsCategories, createNewsCategory, updateNewsCategory } from '@/api/news/category'
-import { ElMessage } from "element-plus"
+import { useMessage } from '@/composables/message'
 import { useRouter } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
 
@@ -71,7 +71,7 @@ const save = (formEl: any) => {
     if (!valid) return false
     if (props.id) {
       updateNewsCategory(input.value, parentId.value, typeId.value).then(res => {
-        ElMessage({
+        useMessage({
           type: "success",
           message: res.message
         })
@@ -81,7 +81,7 @@ const save = (formEl: any) => {
       })
     } else {
       createNewsCategory(input.value, parentId.value).then(res => {
-        ElMessage({
+        useMessage({
           type: "success",
           message: res.message
         })
