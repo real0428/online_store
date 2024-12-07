@@ -1,6 +1,7 @@
 import request from "@/utils/request";
+import type {Category} from "@/types/category";
 
-export const getNewsCategories = () => request({
+export const getNewsCategories = () => request<Category[]>({
   url: '/news/categories'
 })
 
@@ -22,7 +23,7 @@ export const createNewsCategory = (name: string | undefined, parent_id?: number 
   }
 })
 
-export const updateNewsCategory = (name: string | undefined, parent_id?: number | string, type_id?: number | string) => request({
+export const updateNewsCategory = (name: string | undefined, parent_id?: number | string, type_id?: number | string) => request<ApiResponse>({
   url: '/news/categories',
   method: 'put',
   data: {

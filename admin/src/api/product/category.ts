@@ -1,5 +1,9 @@
 import request from "../../utils/request";
-export const getProductCategories = () => request.get('/product/categories')
+import type {Category} from "@/types/category";
+
+export const getProductCategories = () => request<Category[]>({
+  url: '/product/categories'
+})
 
 export const deleteProductCategory = (type_id: number, parent_id?: number) => request({
   url: '/product/categories',
